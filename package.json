@@ -13,7 +13,7 @@
     "prettier": "^2.1.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./src/homeWork01/app.js"
   },
   "author": "Revsky A",
   "license": "ISC"
