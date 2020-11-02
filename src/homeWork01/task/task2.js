@@ -1,5 +1,7 @@
 const goods = require('../goods.json');
 
+module.exports = topPrice(goods);
+
 function getCost(product) {
   if (!product.quantity) {
     return 0;
@@ -24,5 +26,3 @@ function topPrice(goods) {
     return goods[previosIndex];
   });
 }
-
-module.exports = topPrice(goods);
