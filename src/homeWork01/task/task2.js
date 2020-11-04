@@ -16,8 +16,9 @@ function getCost(product) {
 function topPrice(inArray) {
   let previosValue = 0;
   let previosIndex = 0;
-  return inArray.reduce((item, index) => {
-    const value = getCost(item);
+  return inArray.reduce((value, item, index) => {
+    // eslint-disable-next-line no-param-reassign
+    value = getCost(item);
     if (value >= previosValue) {
       previosValue = value;
       previosIndex = index;
