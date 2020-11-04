@@ -1,7 +1,5 @@
 const goods = require('../goods.json');
 
-module.exports = topPrice(goods);
-
 function getCost(product) {
   if (!product.quantity) {
     return 0;
@@ -12,17 +10,20 @@ function getCost(product) {
   if (product.price) {
     return product.quantity * product.price.slice(1);
   }
+  return product;
 }
 
-function topPrice(goods) {
+function topPrice(inArray) {
   let previosValue = 0;
   let previosIndex = 0;
-  return goods.reduce(function (value, item, index) {
-    value = getCost(item);
+  return inArray.reduce((item, index) => {
+    const value = getCost(item);
     if (value >= previosValue) {
       previosValue = value;
       previosIndex = index;
     }
-    return goods[previosIndex];
+    return inArray[previosIndex];
   });
 }
+
+module.exports = topPrice(goods);
