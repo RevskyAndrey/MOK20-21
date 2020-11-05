@@ -6,9 +6,9 @@ https://code.visualstudio.com/docs/editor/debugging (опціонально)
 
 3/. Налаштувати Debug + Nodemon (опціонально, це для вашої зручності)
 
-4.Створити HTTP server за прикладом: https://github.com/GavukaAlexandr/Node.js_HTTP_without_frameworks 
+4+.Створити HTTP server за прикладом: https://github.com/GavukaAlexandr/Node.js_HTTP_without_frameworks
 
-5. Підключити сервер до задач з ДЗ №1
+5+. Підключити сервер до задач з ДЗ №1
 
 6. Створити роутинг, в якому додати окремі роути для кожного таска із ДЗ №1
 
