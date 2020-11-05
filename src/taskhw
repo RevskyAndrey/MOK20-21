@@ -1,10 +1,10 @@
-1. Налаштувати Debug за прикладом доки по VS Code
+1-. Налаштувати Debug за прикладом доки по VS Code
 https://code.visualstudio.com/docs/editor/debugging (опціонально)
 
-2. Встановити та спробувати Nodemon для автоматичного перезапуску вашої
+2+. Встановити та спробувати Nodemon для автоматичного перезапуску вашої
 програми після збереження коду https://www.npmjs.com/package/nodemon (опціонально)
 
-3. Налаштувати Debug + Nodemon (опціонально, це для вашої зручності)
+3/. Налаштувати Debug + Nodemon (опціонально, це для вашої зручності)
 
 4.Створити HTTP server за прикладом: https://github.com/GavukaAlexandr/Node.js_HTTP_without_frameworks 
 
@@ -20,7 +20,7 @@ https://code.visualstudio.com/docs/editor/debugging (опціонально)
 9. Створити роут + контроллер для завантаження нового масиву даних. Дані приймати в request.body
 в форматі JSON, як показано в репозиторії, та зберігати в глобальну змінну store
 
-10-. Створити роут який буде переключати джерело даних ( JSON || store )
+10?11. Створити роут який буде переключати джерело даних ( JSON || store )
 
 11*. Задачою із зірочкою буде редагування JSON файлу за інструкцією
 https://www.codegrepper.com/code-examples/delphi/how+to+edit+local+json+files+using+node
