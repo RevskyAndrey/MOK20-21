@@ -12,6 +12,7 @@
   "root": true,
   "rules": {
     "no-console":"off",
+    "no-plusplus": "off",
     "prettier/prettier": "error",
     "no-param-reassign": [
       "error",
