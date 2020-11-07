@@ -12,19 +12,9 @@ function getCost(product) {
   }
   return product;
 }
-
 function topPrice(inArray) {
-  let previosValue = 0;
-  let previosIndex = 0;
-  return inArray.reduce((value, item, index) => {
-    // eslint-disable-next-line no-param-reassign
-    value = getCost(item);
-    if (value >= previosValue) {
-      previosValue = value;
-      previosIndex = index;
-    }
-    return inArray[previosIndex];
-  });
+  inArray.sort((left, right) => getCost(left) - getCost(right));
+  return inArray.pop();
 }
 
 module.exports = topPrice(goods);
