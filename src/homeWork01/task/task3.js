@@ -1,5 +1,5 @@
 module.exports = (goods) => {
-  goods.forEach((item) => {
+  return goods.map((item) => {
     if (!item.quantity) {
       item.quantity = 0;
     }
@@ -7,6 +7,6 @@ module.exports = (goods) => {
       item.price = item.priceForPair;
     }
     delete item.priceForPair;
+    return item;
   });
-  return goods;
 };
