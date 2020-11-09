@@ -1,12 +1,7 @@
 module.exports = (goods) => {
-  return goods.map((item) => {
-    if (!item.quantity) {
-      item.quantity = 0;
-    }
-    if (!item.price) {
-      item.price = item.priceForPair;
-    }
-    delete item.priceForPair;
-    return item;
+  return goods.map(({ type = 'N/A', color = 'N/A', quantity = 0, price, priceForPair }) => {
+    // eslint-disable-next-line no-param-reassign
+    price = priceForPair;
+    return { type, color, quantity, price };
   });
 };
