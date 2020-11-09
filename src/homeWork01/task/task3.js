@@ -1,16 +1,12 @@
 module.exports = (goods) => {
-  const dolar = '$';
-  goods.forEach(function (item) {
+  goods.forEach((item) => {
     if (!item.quantity) {
       item.quantity = 0;
     }
     if (!item.price) {
-      item.price = '0';
+      item.price = item.priceForPair;
     }
-    if (!item.priceForPair) {
-      item.priceForPair = dolar + item.price.slice(1) * 2;
-    }
+    delete item.priceForPair;
   });
-
   return goods;
 };
