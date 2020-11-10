@@ -1,12 +1,16 @@
-const { home, task1, task2, task3 } = require('../controllers/controller');
+const controller = require('../controllers/controller');
 
 module.exports = (request, response) => {
   const { url, method, queryParams, body: data } = request;
 
-  if (method === 'GET' && url === '/') return home(response);
-  if (method === 'GET' && url === '/task1') return task1(response);
-  if (method === 'GET' && url === '/task2') return task2(response);
-  if (method === 'GET' && url === '/task3') return task3(response);
+  if (method === 'GET' && url === '/') return controller.home(response);
+
+  if (method === 'GET' && url === `/task1?field=${queryParams.field}&value=${queryParams.value}`)
+    return controller.task1(queryParams, response);
+
+  if (method === 'GET' && url === '/task2') return controller.task2(response);
+
+  if (method === 'GET' && url === '/task3') return controller.task3(response);
   // if (method === 'POST' && url === '/comment') return comment(data, response, queryParams);
   else return notFound(response);
 };
