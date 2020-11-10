@@ -1,16 +1,7 @@
 module.exports = (goods) => {
-  const dolar = '$';
-  goods.forEach(function (item) {
-    if (!item.quantity) {
-      item.quantity = 0;
-    }
-    if (!item.price) {
-      item.price = '0';
-    }
-    if (!item.priceForPair) {
-      item.priceForPair = dolar + item.price.slice(1) * 2;
-    }
+  return goods.map(({ type = 'N/A', color = 'N/A', quantity = 0, price, priceForPair }) => {
+    // eslint-disable-next-line no-param-reassign
+    price = priceForPair;
+    return { type, color, quantity, price };
   });
-
-  return goods;
 };
