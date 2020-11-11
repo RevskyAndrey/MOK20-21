@@ -8,25 +8,27 @@ function home(request, response) {
   response.write('Home');
   response.end();
 }
-
-function task1(queryParams, response) {
+// 127.0.0.1:3000/task1?field=type&value=socks
+function task1(response, queryParams) {
   resultArr = firstTask(goods, queryParams.field, queryParams.value);
   response.write('task1 result = ');
-  // в одну строку результат выполнения функции  постмен не выводит - глюк постмена или вебшторма ?
-  response.write(JSON.stringify(resultArr));
-  response.end();
+  response.end(JSON.stringify(resultArr));
 }
 
 function task2(response) {
   response.write('tak2 result = ');
-  response.write(JSON.stringify(secondTask));
-  response.end();
+  response.end(JSON.stringify(secondTask));
 }
 
 function task3(response) {
   response.write('tak3 result = ');
-  response.write(JSON.stringify(thirdTask(goods)));
-  response.end();
+  response.end(JSON.stringify(thirdTask(goods)));
+}
+
+function comment(data, response) {
+  // response.write('tak3 result = ');
+  console.log(data);
+  response.end(JSON.stringify(thirdTask(data)));
 }
 
 module.exports = {
@@ -34,4 +36,5 @@ module.exports = {
   task1,
   task2,
   task3,
+  comment,
 };
