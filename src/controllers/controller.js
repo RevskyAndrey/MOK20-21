@@ -8,6 +8,7 @@ function home(request, response) {
   response.write('Home');
   response.end();
 }
+
 // 127.0.0.1:3000/task1?field=type&value=socks
 function task1(response, queryParams) {
   resultArr = firstTask(goods, queryParams.field, queryParams.value);
@@ -25,10 +26,12 @@ function task3(response) {
   response.end(JSON.stringify(thirdTask(goods)));
 }
 
+// POST
+// 127.0.0.1:3000/comment
 function comment(data, response) {
   // response.write('tak3 result = ');
   console.log(data);
-  response.end(JSON.stringify(thirdTask(data)));
+  response.end(JSON.stringify(data));
 }
 
 module.exports = {

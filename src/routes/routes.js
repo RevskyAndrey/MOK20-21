@@ -25,6 +25,5 @@ module.exports = (request, response) => {
   if (method === 'GET' && url === '/task3') return modArrTask(response);
 
   if (method === 'POST' && url === '/comment') return comment(data, response);
-
-  return notFound(response);
+  else return notFound(response);
 };
