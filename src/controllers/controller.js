@@ -1,3 +1,8 @@
+const fs = require('fs');
+const path = require('path');
+
+const pathToFile = path.resolve(__dirname, '../', 'goods.json');
+
 const goods = require('../goods.json');
 const { task1: firstTask, task2: secondTask, task3: thirdTask } = require('../task');
 
@@ -29,8 +34,8 @@ function task3(response) {
 // POST
 // 127.0.0.1:3000/comment
 function comment(data, response) {
-  // response.write('tak3 result = ');
-  console.log(data);
+  fs.writeFileSync(pathToFile, JSON.stringify(data, null, 1));
+  response.write('Post result = ');
   response.end(JSON.stringify(data));
 }
 
