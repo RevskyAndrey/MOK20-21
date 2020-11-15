@@ -5,14 +5,12 @@ const {
   task3: modArrTask,
   discount: discountTask,
   discountAll,
-  comment,
+  changeJSON,
 } = require('../controllers/controller');
 
 function notFound(res) {
-  res.setHeader('Content-Type', 'application/json');
   res.statusCode = 404;
-  res.write('404');
-  res.end();
+  res.end('404 page not found check you URL and try again');
 }
 
 module.exports = (request, response) => {
@@ -26,11 +24,11 @@ module.exports = (request, response) => {
 
   if (method === 'GET' && url === '/task3') return modArrTask(response);
 
-  if (method === 'GET' && url === '/discount') return discountTask(response);
-
   if (method === 'GET' && url === '/discountAll') return discountAll(response);
 
-  if (method === 'POST' && url === '/comment') return comment(data, response);
+  if (method === 'GET' && url === '/discount') return discountTask(response);
+
+  if (method === 'POST' && url === '/changeJSON') return changeJSON(data, response);
 
   return notFound(response);
 };
