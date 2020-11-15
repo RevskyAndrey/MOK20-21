@@ -4,7 +4,13 @@ const path = require('path');
 const pathToFile = path.resolve(__dirname, '../', 'goods.json');
 
 const goods = require('../goods.json');
-const { task1: firstTask, task2: secondTask, task3: thirdTask } = require('../task');
+const {
+  task1: firstTask,
+  task2: secondTask,
+  task3: thirdTask,
+  discount: discountTask,
+  discountAll: discountForAll,
+} = require('../task');
 
 let resultArr = [];
 
@@ -31,6 +37,18 @@ function task3(response) {
   response.end(JSON.stringify(thirdTask(goods)));
 }
 
+// 127.0.0.1:3000/discount
+function discount(response) {
+  response.write('Your discount= ');
+  response.end(JSON.stringify(discountTask(response)));
+}
+
+// 127.0.0.1:3000/discountAll
+function discountAll(response) {
+  response.write('Today sales = ');
+  response.end(JSON.stringify(discountForAll(response)));
+}
+
 // POST
 // 127.0.0.1:3000/comment
 function comment(data, response) {
@@ -44,5 +62,7 @@ module.exports = {
   task1,
   task2,
   task3,
+  discount,
+  discountAll,
   comment,
 };

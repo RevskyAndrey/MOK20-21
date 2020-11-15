@@ -3,6 +3,8 @@ const {
   task1: filterArrTask,
   task2: maxCostTask,
   task3: modArrTask,
+  discount: discountTask,
+  discountAll,
   comment,
 } = require('../controllers/controller');
 
@@ -24,6 +26,11 @@ module.exports = (request, response) => {
 
   if (method === 'GET' && url === '/task3') return modArrTask(response);
 
+  if (method === 'GET' && url === '/discount') return discountTask(response);
+
+  if (method === 'GET' && url === '/discountAll') return discountAll(response);
+
   if (method === 'POST' && url === '/comment') return comment(data, response);
-  else return notFound(response);
+
+  return notFound(response);
 };
