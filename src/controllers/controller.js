@@ -32,8 +32,8 @@ function task3(response) {
 }
 
 // POST
-// 127.0.0.1:3000/comment
-function comment(data, response) {
+// 127.0.0.1:3000/changeJSON
+function changeJSON(data, response) {
   fs.writeFileSync(pathToFile, JSON.stringify(data, null, 1));
   response.write('Post result = ');
   response.end(JSON.stringify(data));
@@ -44,5 +44,5 @@ module.exports = {
   task1,
   task2,
   task3,
-  comment,
+  changeJSON,
 };
