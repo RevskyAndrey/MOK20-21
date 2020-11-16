@@ -16,6 +16,7 @@ function home(request, response) {
 
 // 127.0.0.1:3000/task1?field=type&value=socks
 function task1(response, queryParams) {
+  if (queryParams.field === 'quantity') queryParams.value = Number(queryParams.value);
   resultArr = firstTask(goods, queryParams.field, queryParams.value);
   response.write('task1 result = ');
   response.end(JSON.stringify(resultArr));
