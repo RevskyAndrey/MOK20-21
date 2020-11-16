@@ -40,6 +40,7 @@ function task3(response) {
 // 127.0.0.1:3000/discount
 function discount(response) {
   response.write('Your discount= ');
+  // response.end(JSON.stringify(discountTask(response)));
   response.end(JSON.stringify(discountTask(response)));
 }
 

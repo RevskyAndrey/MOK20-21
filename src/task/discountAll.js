@@ -9,27 +9,30 @@ function priceCalculation(price, discount) {
 function checkDiscount(cost) {
   const discount = getDiscount();
 
-  if (discount === 'not your day') return cost;
+  if (discount === 'not your day') return checkDiscount(cost);
   return priceCalculation(cost, discount);
 }
 
 function getDiscountAllItems() {
+
   myMap(goods, (item) => {
-    const cost = item.price || item.priceForPair;
+    item.price = item.price || item.priceForPair;
+    delete item.priceForPair;
+
     if (!item.quantity) item.quantity = 0;
 
     if (item.type === 'hat') {
-      item.newPrice = checkDiscount(cost);
+      item.newPrice = checkDiscount(item.price);
       item.newPrice = checkDiscount(item.newPrice);
     }
 
     if (item.type === 'hat' && item.color === 'red') {
-      item.newPrice = checkDiscount(cost);
+      item.newPrice = checkDiscount(item.price);
       item.newPrice = checkDiscount(item.newPrice);
       item.newPrice = checkDiscount(item.newPrice);
     }
 
-    item.newPrice = checkDiscount(cost);
+    item.newPrice = checkDiscount(item.price);
     item.newPrice += '$';
     return item;
   });
