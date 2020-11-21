@@ -1,22 +1,21 @@
+const min = 1;
+const max = 99;
+
 function getRandomInt() {
-  const min = Math.ceil(1);
-  const max = Math.floor(99);
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function getDiscount(data) {
-  const maxDiscount = 20;
-  const yourDiscont = getRandomInt();
-  // eslint-disable-next-line no-param-reassign
-  if (yourDiscont <= maxDiscount) data = yourDiscont;
-  else {
-    const err = new Error('not your day');
-    // eslint-disable-next-line no-param-reassign
-    data = err.message;
-  }
-  return data;
+function getDiscount() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const maxDiscount = 20;
+      const yourDiscont = getRandomInt();
+      if (yourDiscont <= maxDiscount) resolve(yourDiscont);
+      else reject(new Error('not your day'));
+    }, 50);
+  });
 }
 
-module.exports = (data) => {
-  return getDiscount(data);
+module.exports = () => {
+  return getDiscount();
 };
