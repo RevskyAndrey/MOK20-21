@@ -8,7 +8,7 @@ const {
   task1: firstTask,
   task2: secondTask,
   task3: thirdTask,
-  discountAll: discountForAll,
+  discount: discountForAll,
 } = require('../task');
 
 let resultArr = [];
@@ -37,9 +37,9 @@ function task3(response) {
 }
 
 // 127.0.0.1:3000/products/discounts
-function discountAll(response) {
+async function discountAll(response) {
   response.write('Today sales = ');
-  const temp = discountForAll(response);
+  const temp = await discountForAll(goods);
   response.end(JSON.stringify(temp));
 }
 
