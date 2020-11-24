@@ -39,8 +39,9 @@ function task3(response) {
 // 127.0.0.1:3000/products/discounts
 async function discountAll(response) {
   response.write('Today sales = ');
-  const temp = await discountForAll(goods);
-  response.end(JSON.stringify(temp));
+  // eslint-disable-next-line no-shadow
+  const resultArr = await discountForAll(goods);
+  response.end(JSON.stringify(resultArr));
 }
 
 // POST

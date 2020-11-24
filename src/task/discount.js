@@ -60,7 +60,6 @@ function getDiscountAllItems(goods) {
   //   });
   //   return item;
   // });
-
   return newArr;
 }
 
