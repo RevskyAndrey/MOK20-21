@@ -36,10 +36,11 @@ function task3(response) {
   response.end(JSON.stringify(thirdTask(goods)));
 }
 
-// 127.0.0.1:3000/discountAll
+// 127.0.0.1:3000/products/discounts
 function discountAll(response) {
   response.write('Today sales = ');
-  response.end(JSON.stringify(discountForAll(response)));
+  const temp = discountForAll(response);
+  response.end(JSON.stringify(temp));
 }
 
 // POST

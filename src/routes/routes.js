@@ -23,7 +23,7 @@ module.exports = (request, response) => {
 
   if (method === 'GET' && url === '/task3') return modArrTask(response);
 
-  if (method === 'GET' && url === '/discountAll') return discountAll(response);
+  if (method === 'GET' && url === '/products/discounts') return discountAll(response);
 
   if (method === 'POST' && url === '/changeJSON') return changeJSON(data, response);
 
