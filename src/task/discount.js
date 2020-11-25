@@ -9,14 +9,15 @@ function getRandomInt() {
 }
 
 function priceCalculation(price, discount) {
-  return (price.slice(1) * (1 - discount / 100)).toFixed(2);
+  const cost = price.slice(1);
+  return (cost * (1 - discount / 100)).toFixed(2);
 }
 
 function generateDiscount(callback) {
   setTimeout(() => {
-    const yourDiscont = getRandomInt();
-    if (yourDiscont <= maxDiscount) callback(null, yourDiscont);
-    callback(new Error('not your day'));
+    const yourDiscont =   getRandomInt();
+    if (yourDiscont < maxDiscount) return callback(null, yourDiscont);
+    return callback(new Error('not your day'));
   }, 50);
 }
 
@@ -34,13 +35,16 @@ function generateValidDiscountPromise() {
 }
 
 function getDiscountAllItems(goods) {
-  const newArr = task3(goods);
-  myMap(newArr, (item) => {
+  const arr = task3(goods);
+  return myMap(goods, (item) => {
     generateValidDiscountPromise().then((res) => {
-      item.discount = res;
-      item.newPrice = priceCalculation(item.price, res);
-      console.log(item);
-    });
+        item.discount = `${res}%`;
+        item.newPrice = priceCalculation(item.price, res);
+        console.log(item);
+        return item;
+      },
+    );
+    return arr;
   });
 
   // myMap(arr, (item) => {
@@ -60,7 +64,7 @@ function getDiscountAllItems(goods) {
   //   });
   //   return item;
   // });
-  return newArr;
+  return arr;
 }
 
 module.exports = (goods) => {
