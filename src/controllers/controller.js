@@ -45,9 +45,7 @@ function priceCalculation(price, discount) {
 
 // 127.0.0.1:3000/products/discounts
 async function discountAll(response) {
-  response.write('Today sales = ');
-
-  const newArr = thirdTask(goods);
+    const newArr = thirdTask(goods);
   const promiseGoods = myMap(newArr, async (item) => {
 
     let discount = await discountForItem();
@@ -58,15 +56,12 @@ async function discountAll(response) {
     }
     item.discount = discount;
     item.newPrice = priceCalculation(item.price, item.discount);
-    console.table(item);
     return item;
 
   });
-  console.log('newArr', newArr);
-  return Promise.all(promiseGoods);
+  const newGoods = await Promise.all(promiseGoods);
+  response.end(JSON.stringify(newGoods));
 
-
-  response.end(JSON.stringify(newArr));
 }
 
 
