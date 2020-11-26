@@ -8,7 +8,8 @@ const {
   task1: firstTask,
   task2: secondTask,
   task3: thirdTask,
-  discount: discountForAll,
+  discount: discountForItem,
+  myMap,
 } = require('../task');
 
 let resultArr = [];
@@ -36,13 +37,38 @@ function task3(response) {
   response.end(JSON.stringify(thirdTask(goods)));
 }
 
+function priceCalculation(price, discount) {
+  const cost = price.slice(1);
+  return (cost * (1 - discount / 100)).toFixed(2);
+}
+
+
 // 127.0.0.1:3000/products/discounts
 async function discountAll(response) {
   response.write('Today sales = ');
-  // eslint-disable-next-line no-shadow
-  const resultArr = await discountForAll(goods);
-  response.end(JSON.stringify(resultArr));
+
+  const newArr = thirdTask(goods);
+  const promiseGoods = myMap(newArr, async (item) => {
+
+    let discount = await discountForItem();
+    if (item.type === 'hat') {
+      discount += await discountForItem();
+      if (item.color === 'red')
+        discount += await discountForItem();
+    }
+    item.discount = discount;
+    item.newPrice = priceCalculation(item.price, item.discount);
+    console.table(item);
+    return item;
+
+  });
+  console.log('newArr', newArr);
+  return Promise.all(promiseGoods);
+
+
+  response.end(JSON.stringify(newArr));
 }
+
 
 // POST
 // 127.0.0.1:3000/changeJSON
