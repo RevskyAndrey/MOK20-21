@@ -54,8 +54,8 @@ async function discountAll(response) {
       if (item.color === 'red')
         discount += await discountForItem();
     }
-    item.discount = discount;
-    item.newPrice = priceCalculation(item.price, item.discount);
+    item.discount = `${discount}%`;
+    item.newPrice = `$ ${priceCalculation(item.price, discount)}`;
     return item;
 
   });
