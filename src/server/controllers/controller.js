@@ -3,8 +3,8 @@ const path = require('path');
 
 const pathToFile = path.resolve(__dirname, '../', 'goods.json');
 
-const goods = require('../goods.json');
-const { task1: firstTask, task2: secondTask, task3: thirdTask } = require('../task');
+const goods = require('../../goods.json');
+const { task1: firstTask, task2: secondTask, task3: thirdTask } = require('../../task');
 
 let resultArr = [];
 

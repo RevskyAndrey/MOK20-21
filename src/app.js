@@ -1,9 +1,27 @@
-require('dotenv').config();
+const server = require('./server');
 
-const http = require('http');
-const requestHandler = require('./utils/requestHandler');
+function gracefulShutdown() {
+  const exitHandler = error => {
+    if (error) console.log(error);
 
-const server = http.createServer(requestHandler);
-server.listen(Number(process.env.PORT), () =>
-  console.log(` server has be  started on ${process.env.PORT}`),
-);
+    console.log('Gracefully shutdown...');
+    server.stop(() => {
+      process.exit();
+    });
+  };
+  process.on('SIGINT', exitHandler);
+  process.on('SIGTERM', exitHandler);
+
+  process.on('SIGUSR1', exitHandler);
+  process.on('SIGUSR2', exitHandler);
+
+  process.on('uncaughtException', exitHandler);
+  process.on('unhandledRejection', exitHandler);
+}
+
+function boot() {
+  gracefulShutdown();
+  server.start();
+}
+
+boot();
