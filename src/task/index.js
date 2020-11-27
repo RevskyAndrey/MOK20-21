@@ -4,5 +4,4 @@ const task3 = require('./task3');
 const myMap = require('./myMap');
 const discount = require('./discount');
 
-
-module.exports = { task1, task2, task3, myMap, discount};
+module.exports = { task1, task2, task3, myMap, discount };

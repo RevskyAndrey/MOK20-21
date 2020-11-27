@@ -42,28 +42,24 @@ function priceCalculation(price, discount) {
   return (cost * (1 - discount / 100)).toFixed(2);
 }
 
-
 // 127.0.0.1:3000/products/discounts
 async function discountAll(response) {
-    const newArr = thirdTask(goods);
+  const newArr = thirdTask(goods);
   const promiseGoods = myMap(newArr, async (item) => {
-
     let discount = await discountForItem();
     if (item.type === 'hat') {
       discount += await discountForItem();
-      if (item.color === 'red')
+      if (item.color === 'red') {
         discount += await discountForItem();
+      }
     }
     item.discount = `${discount}%`;
     item.newPrice = `$ ${priceCalculation(item.price, discount)}`;
     return item;
-
   });
   const newGoods = await Promise.all(promiseGoods);
   response.end(JSON.stringify(newGoods));
-
 }
-
 
 // POST
 // 127.0.0.1:3000/changeJSON

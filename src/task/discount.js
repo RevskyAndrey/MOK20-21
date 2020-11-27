@@ -1,13 +1,10 @@
 const min = 1;
 const max = 99;
 const maxDiscount = 20;
-const myMap = require('./myMap');
-const task3 = require('./task3');
 
 function getRandomInt() {
   return Math.floor(Math.random() * (max - min)) + min;
 }
-
 
 function generateDiscount(callback) {
   setTimeout(() => {
@@ -32,5 +29,4 @@ function generateValidDiscountPromise() {
 
 module.exports = () => {
   return generateValidDiscountPromise();
-
 };
