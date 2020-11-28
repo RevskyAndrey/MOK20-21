@@ -1,7 +1,8 @@
+require('dotenv').config();
 const server = require('./server');
 
 function gracefulShutdown() {
-  const exitHandler = error => {
+  const exitHandler = (error) => {
     if (error) console.log(error);
 
     console.log('Gracefully shutdown...');

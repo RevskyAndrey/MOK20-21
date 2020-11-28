@@ -1,4 +1,4 @@
-const goods = require('../goods.json');
+const goods = require('../../goods.json');
 
 function getCost(product) {
   if (!product.quantity) {

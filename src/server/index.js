@@ -1,13 +1,13 @@
-require('dotenv').config();
 const http = require('http');
 const requestHandler = require('./utils/requestHandler');
 
 const server = http.createServer(requestHandler);
 
 function start() {
-  server.listen(Number(process.env.PORT), () =>
-    console.log(`server is listening on ${process.env.PORT}`),
-  );
+  const port = Number(process.env.PORT) || 3000;
+  server.listen(port, () => {
+    console.log(`Server is listening on ${port}`);
+  });
 }
 
 function stop(callback) {

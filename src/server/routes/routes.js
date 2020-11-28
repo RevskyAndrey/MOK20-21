@@ -5,6 +5,7 @@ const {
   task3: modArrTask,
   discountAll,
   changeJSON,
+  uploadCSV,
 } = require('../controllers/controller');
 
 function notFound(res) {
@@ -12,9 +13,8 @@ function notFound(res) {
   res.end('404 page not found check you URL and try again');
 }
 
-module.exports = (request, response) => {
+async function handleRoutes(request, response) {
   const { url, method, queryParams, body: data } = request;
-
   if (method === 'GET' && url === '/') return home(response);
 
   if (method === 'GET' && url.startsWith('/task1?')) return filterArrTask(response, queryParams);
@@ -27,5 +27,19 @@ module.exports = (request, response) => {
 
   if (method === 'POST' && url === '/changeJSON') return changeJSON(data, response);
 
+  // if (method === 'GET' && url === '/uploads') await loadCSV(data, response);
   return notFound(response);
+}
+
+async function handleStreamRoutes(request, response) {
+  const { url, method, body: data } = request;
+
+  if (method === 'POST' && url === '/uploads') return uploadCSV(data, response);
+
+  return notFound(response);
+}
+
+module.exports = {
+  handleRoutes,
+  handleStreamRoutes,
 };
