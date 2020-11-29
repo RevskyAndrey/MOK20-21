@@ -18,12 +18,8 @@ module.exports = async (request, response) => {
     }
 
     request
-      .on('error', (err) => {
-        console.error(err);
-      })
-      .on('data', (chunk) => {
-        body.push(chunk);
-      })
+      .on('error', (err) => console.error(err))
+      .on('data', (chunk) => body.push(chunk))
       .on('end', () => {
         body = Buffer.concat(body).toString();
 

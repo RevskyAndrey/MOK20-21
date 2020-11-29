@@ -70,35 +70,11 @@ async function discountAll(response) {
   }
 }
 
-// POST
-// 127.0.0.1:3000/changeJSON
+// POST  127.0.0.1:3000/changeJSON
 function changeJSON(data, response) {
   fs.writeFileSync(pathToFile, JSON.stringify(data, null, 1));
   response.write('Post result = ');
   response.end(JSON.stringify(data));
-}
-
-// POST
-// 127.0.0.1:3000/loadingCSV
-
-async function uploadCSV(inputStream, response) {
-  const uploadDir = process.env.UPLOAD_DIR;
-  const gunzip = createGunzip();
-  const filePath = `${uploadDir}${nanoid(8)}-${Date.now()}-${nanoid(4)}.json`;
-  const outputStream = fs.createWriteStream(filePath);
-  try {
-    await promisifiedPipeline(inputStream, gunzip, cvsToJSON(), outputStream);
-  } catch (err) {
-    console.err('err', err);
-  }
-
-  try {
-    await fs.promises.rm(filePath);
-  } catch (rmErr) {
-    console.error(`Unable to remove JSON ${filePath}`, rmErr);
-    throw new Error('Unable to remove JSON');
-  }
-  response.end(filePath);
 }
 
 module.exports = {
@@ -108,5 +84,4 @@ module.exports = {
   task3,
   discountAll,
   changeJSON,
-  uploadCSV,
 };

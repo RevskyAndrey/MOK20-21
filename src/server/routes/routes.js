@@ -5,12 +5,35 @@ const {
   task3: modArrTask,
   discountAll,
   changeJSON,
-  uploadCSV,
 } = require('../controllers/controller');
+
+const uploadCSV = require('../controllers/uploadCsv');
 
 function notFound(res) {
   res.statusCode = 404;
   res.end('404 page not found check you URL and try again');
+}
+
+async function handleStreamRoutes(request, response) {
+  const { url, method } = request;
+
+  if (method === 'PUT' && url === '/uploads') {
+    try {
+      await uploadCSV(request);
+    } catch (err) {
+      console.log(' Failed to upload csv.gz ', err);
+      response.setHeader('Content-Type', 'application/json');
+      response.status = 500;
+      response.end(JSON.stringify({ status: err }));
+      return;
+    }
+    response.setHeader('Content-Type', 'application/json');
+    response.status = 200;
+    response.end(JSON.stringify({ status: 'ok' }));
+    return;
+  }
+
+  notFound(response);
 }
 
 async function handleRoutes(request, response) {
@@ -28,14 +51,6 @@ async function handleRoutes(request, response) {
   if (method === 'POST' && url === '/changeJSON') return changeJSON(data, response);
 
   // if (method === 'GET' && url === '/uploads') await loadCSV(data, response);
-  return notFound(response);
-}
-
-async function handleStreamRoutes(request, response) {
-  const { url, method, body: data } = request;
-
-  if (method === 'POST' && url === '/uploads') return uploadCSV(data, response);
-
   return notFound(response);
 }
 
