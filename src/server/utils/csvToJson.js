@@ -11,7 +11,7 @@ function makeProducts(csvKeys, csvRows) {
       if (key === 'quantity') {
         value = Number.parseInt(csvValues[i], 10);
         if (Number.isNaN(value)) {
-          console.error(`We have a problem.Invalid CSV quantity:`, value);
+          console.error(`We have a problem. Invalid CSV quantity:`, value);
           value = 0;
         }
       }

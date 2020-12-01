@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const {
   home,
   task1: filterArrTask,
@@ -17,6 +19,17 @@ function notFound(res) {
 async function handleStreamRoutes(request, response) {
   const { url, method } = request;
 
+  if (method === 'GET' && url === '/uploads') {
+    const dir = path.resolve(process.env.UPLOAD_DIR);
+    const listFiles = fs.readdirSync(dir);
+    if (listFiles.length === 0) {
+      response.end(JSON.stringify({ status: 'no files ' }));
+      return;
+    }
+    response.end(Object.fromEntries(listFiles));
+    return;
+  }
+
   if (method === 'PUT' && url === '/uploads') {
     try {
       await uploadCSV(request);
@@ -29,10 +42,9 @@ async function handleStreamRoutes(request, response) {
     }
     response.setHeader('Content-Type', 'application/json');
     response.status = 200;
-    response.end(JSON.stringify({ status: 'ok' }));
+    response.end(JSON.stringify({ status: 'All ok' }));
     return;
   }
-
   notFound(response);
 }
 
@@ -50,7 +62,6 @@ async function handleRoutes(request, response) {
 
   if (method === 'POST' && url === '/changeJSON') return changeJSON(data, response);
 
-  // if (method === 'GET' && url === '/uploads') await loadCSV(data, response);
   return notFound(response);
 }
 
