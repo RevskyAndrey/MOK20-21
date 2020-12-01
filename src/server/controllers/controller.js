@@ -71,6 +71,11 @@ function changeJSON(data, response) {
   response.end(JSON.stringify(data));
 }
 
+function optimizeJson(response, filename) {
+  console.log(filename);
+  response.end(JSON.stringify(filename));
+}
+
 module.exports = {
   home,
   task1,
@@ -78,4 +83,5 @@ module.exports = {
   task3,
   discountAll,
   changeJSON,
+  optimizeJson,
 };

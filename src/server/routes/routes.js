@@ -1,5 +1,6 @@
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
+
 const {
   home,
   task1: filterArrTask,
@@ -7,6 +8,7 @@ const {
   task3: modArrTask,
   discountAll,
   changeJSON,
+  optimizeJson,
 } = require('../controllers/controller');
 
 const uploadCSV = require('../controllers/uploadCsv');
@@ -18,7 +20,6 @@ function notFound(res) {
 
 async function handleStreamRoutes(request, response) {
   const { url, method } = request;
-
   if (method === 'GET' && url === '/uploads') {
     const dir = path.resolve(process.env.UPLOAD_DIR);
     const listFiles = fs.readdirSync(dir);
@@ -26,7 +27,8 @@ async function handleStreamRoutes(request, response) {
       response.end(JSON.stringify({ status: 'no files ' }));
       return;
     }
-    response.end(Object.fromEntries(listFiles));
+    const result = { ...listFiles };
+    response.end(JSON.stringify(result));
     return;
   }
 
@@ -43,7 +45,6 @@ async function handleStreamRoutes(request, response) {
     response.setHeader('Content-Type', 'application/json');
     response.status = 200;
     response.end(JSON.stringify({ status: 'All ok' }));
-    return;
   }
   notFound(response);
 }
@@ -61,6 +62,11 @@ async function handleRoutes(request, response) {
   if (method === 'GET' && url === '/products/discounts') return discountAll(response);
 
   if (method === 'POST' && url === '/changeJSON') return changeJSON(data, response);
+
+  if (method === 'POST' && url.startsWith('/uploads/optimize/')) {
+    const fileName = path.parse(url).base;
+    return optimizeJson(response, fileName);
+  }
 
   return notFound(response);
 }

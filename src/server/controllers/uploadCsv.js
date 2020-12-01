@@ -18,6 +18,7 @@ function checkDownloadCatalogs() {
     fs.mkdirSync(uploadDir);
   }
 }
+
 function dayToday() {
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, '0');
