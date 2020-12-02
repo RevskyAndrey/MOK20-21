@@ -20,17 +20,6 @@ function notFound(res) {
 
 async function handleStreamRoutes(request, response) {
   const { url, method } = request;
-  if (method === 'GET' && url === '/uploads') {
-    const dir = path.resolve(process.env.UPLOAD_DIR);
-    const listFiles = fs.readdirSync(dir);
-    if (listFiles.length === 0) {
-      response.end(JSON.stringify({ status: 'no files ' }));
-      return;
-    }
-    const result = { ...listFiles };
-    response.end(JSON.stringify(result));
-    return;
-  }
 
   if (method === 'PUT' && url === '/uploads') {
     try {
@@ -45,12 +34,14 @@ async function handleStreamRoutes(request, response) {
     response.setHeader('Content-Type', 'application/json');
     response.status = 200;
     response.end(JSON.stringify({ status: 'All ok' }));
+    return;
   }
   notFound(response);
 }
 
 async function handleRoutes(request, response) {
   const { url, method, queryParams, body: data } = request;
+
   if (method === 'GET' && url === '/') return home(response);
 
   if (method === 'GET' && url.startsWith('/task1?')) return filterArrTask(response, queryParams);
@@ -66,6 +57,16 @@ async function handleRoutes(request, response) {
   if (method === 'POST' && url.startsWith('/uploads/optimize/')) {
     const fileName = path.parse(url).base;
     return optimizeJSON(response, fileName);
+  }
+
+  if (method === 'GET' && url === '/uploads') {
+    const dir = path.resolve(process.env.UPLOAD_DIR);
+    const listFiles = fs.readdirSync(dir);
+    if (listFiles.length === 0) {
+      return response.end(JSON.stringify({ status: 'no files ' }));
+    }
+    const result = [...listFiles].filter((item) => item !== 'optimized');
+    return response.end(JSON.stringify(result));
   }
 
   return notFound(response);

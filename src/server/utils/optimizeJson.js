@@ -13,5 +13,5 @@ function checkOptimizedCatalogs() {
 
 module.exports = async (fileName) => {
   checkOptimizedCatalogs();
-  console.log(fileName);
+  const readStream = fs.createReadStream(fileName);
 };

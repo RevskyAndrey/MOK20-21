@@ -79,10 +79,10 @@ function optimizeJSON(response, fileName) {
   const result = listFiles.includes(fileName);
   if (result) {
     optimizeJson(fileName);
-    response.end(JSON.stringify(fileName));
+    response.end(JSON.stringify(`starting optimization filename ${fileName} `));
     return;
   }
-  response.end(JSON.stringify({ filename: 'not found' }));
+  response.end(JSON.stringify(` not found filename ${fileName}`));
 }
 
 module.exports = {
