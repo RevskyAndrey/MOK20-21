@@ -8,7 +8,7 @@ const {
   task3: modArrTask,
   discountAll,
   changeJSON,
-  optimizeJson,
+  optimizeJSON,
 } = require('../controllers/controller');
 
 const uploadCSV = require('../controllers/uploadCsv');
@@ -65,7 +65,7 @@ async function handleRoutes(request, response) {
 
   if (method === 'POST' && url.startsWith('/uploads/optimize/')) {
     const fileName = path.parse(url).base;
-    return optimizeJson(response, fileName);
+    return optimizeJSON(response, fileName);
   }
 
   return notFound(response);

@@ -12,6 +12,8 @@ const {
   myMap,
 } = require('../task');
 
+const optimizeJson = require('../utils/optimizeJson');
+
 let resultArr = [];
 
 function home(response) {
@@ -71,9 +73,16 @@ function changeJSON(data, response) {
   response.end(JSON.stringify(data));
 }
 
-function optimizeJson(response, filename) {
-  console.log(filename);
-  response.end(JSON.stringify(filename));
+function optimizeJSON(response, fileName) {
+  const uploadDir = path.resolve(process.env.UPLOAD_DIR);
+  const listFiles = fs.readdirSync(uploadDir);
+  const result = listFiles.includes(fileName);
+  if (result) {
+    optimizeJson(fileName);
+    response.end(JSON.stringify(fileName));
+    return;
+  }
+  response.end(JSON.stringify({ filename: 'not found' }));
 }
 
 module.exports = {
@@ -83,5 +92,5 @@ module.exports = {
   task3,
   discountAll,
   changeJSON,
-  optimizeJson,
+  optimizeJSON,
 };
