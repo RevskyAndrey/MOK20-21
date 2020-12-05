@@ -1,30 +1,17 @@
-require('dotenv').config();
-const server = require('./server');
-const autoOptimize = require('./server/utils/moduleAuto');
+const app = require('./server');
+const { port } = require('./config');
 
-function gracefulShutdown() {
-  const exitHandler = (error) => {
-    if (error) console.log(error);
+app.listen(port, () => {
+  console.log(` INFO : Express server started and listening at http://localhost:${port}`);
+});
 
-    console.log('Gracefully shutdown...');
-    server.stop(() => {
-      process.exit();
-    });
-  };
-  process.on('SIGINT', exitHandler);
-  process.on('SIGTERM', exitHandler);
+//
+//
+//
+// function boot() {
+//   gracefulShutdown();
+//   server.start();
+//   autoOptimize();
+// }
 
-  process.on('SIGUSR1', exitHandler);
-  process.on('SIGUSR2', exitHandler);
-
-  process.on('uncaughtException', exitHandler);
-  process.on('unhandledRejection', exitHandler);
-}
-
-function boot() {
-  gracefulShutdown();
-  server.start();
-  autoOptimize();
-}
-
-boot();
+// boot();

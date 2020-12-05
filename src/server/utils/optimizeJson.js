@@ -1,7 +1,5 @@
 const fs = require('fs');
-const path = require('path');
-
-const OptimizedDir = path.resolve(process.env.OPTIMIZED_DIR);
+const config = require('../../config');
 
 function parserJson(data) {
   return data.map((product) => {
@@ -16,9 +14,9 @@ function parserJson(data) {
 
 function checkOptimizedCatalogs() {
   try {
-    fs.accessSync(OptimizedDir, fs.constants.F_OK);
+    fs.accessSync(config.optimizedDir, fs.constants.F_OK);
   } catch (err) {
-    fs.mkdirSync(OptimizedDir);
+    fs.mkdirSync(config.optimizedDir);
   }
 }
 
@@ -39,7 +37,7 @@ function optimizeArray(inputArray, outputArray) {
 
 module.exports = async (fileName) => {
   checkOptimizedCatalogs();
-  const pathFile = `${process.env.UPLOAD_DIR}${fileName}`;
+  const pathFile = `${config.uploadDir}${fileName}`;
   const readStream = fs.createReadStream(pathFile, { encoding: 'utf8' });
   let itFirst = true;
   let productFragment = '';
@@ -61,7 +59,7 @@ module.exports = async (fileName) => {
   });
   readStream.once('end', () => {
     const totalQuantity = goods.reduce((acc, current) => acc + current.quantity, 0);
-    const outDir = `${OptimizedDir}/${fileName}`;
+    const outDir = `${config.optimizedDir}/${fileName}`;
     console.log('Total quantity =', totalQuantity);
     fs.writeFile(outDir, JSON.stringify(goods), () => {
       console.log(`Finish optimization file : ${fileName}`);

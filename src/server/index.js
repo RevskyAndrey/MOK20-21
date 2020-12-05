@@ -1,14 +1,10 @@
 const http = require('http');
+const express = require('express');
 const requestHandler = require('./utils/requestHandler');
-
+// const autoOptimize = require('./server/utils/moduleAuto');
 const server = http.createServer(requestHandler);
 
-function start() {
-  const port = Number(process.env.PORT) || 3000;
-  server.listen(port, () => {
-    console.log(`Server is listening on ${port}`);
-  });
-}
+const app = express();
 
 function stop(callback) {
   server.close((err) => {
@@ -22,8 +18,8 @@ function stop(callback) {
     callback();
   });
 }
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
-module.exports = {
-  start,
-  stop,
-};
+module.exports = app;
