@@ -1,25 +1,14 @@
-const http = require('http');
 const express = require('express');
-const requestHandler = require('./utils/requestHandler');
+// const requestHandler = require('./utils/requestHandler');
 // const autoOptimize = require('./server/utils/moduleAuto');
-const server = http.createServer(requestHandler);
 
 const app = express();
 
-function stop(callback) {
-  server.close((err) => {
-    if (err) {
-      console.error(err, 'Failed to close server!');
-      callback();
-      return;
-    }
+const task2 = require('./routes/task2');
 
-    console.log('Server has been stopped.');
-    callback();
-  });
-}
+app.use('/task2', task2);
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('Home');
 });
 
 module.exports = app;

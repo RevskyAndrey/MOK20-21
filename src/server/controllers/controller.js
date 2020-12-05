@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const goods = require('../../goods.json');
 
 const pathToFile = path.resolve(__dirname, '../', 'goods.json');
 
-const goods = require('../../goods.json');
 const {
   task1: firstTask,
   task2: secondTask,
