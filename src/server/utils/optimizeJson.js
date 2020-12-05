@@ -23,14 +23,11 @@ function checkOptimizedCatalogs() {
 }
 
 function optimizeArray(inputArray, outputArray) {
-  // const handledArray = outputArray;
   inputArray.forEach((product) => {
     const { type, color, quantity, price } = product;
-
     const elementIndex = outputArray.findIndex(
       (element) => element.type === type && element.color === color && element.price === price,
     );
-
     if (elementIndex >= 0) {
       outputArray[elementIndex].quantity += +quantity;
     } else {
@@ -47,8 +44,7 @@ module.exports = async (fileName) => {
   let itFirst = true;
   let productFragment = '';
   const goods = [];
-  console.log(`\nStart file optimization ${pathFile}`);
-
+  console.log(`Start file optimization ${pathFile}`);
   readStream.on('error', (err) => console.error(err));
   readStream.on('data', (chunk) => {
     let data = chunk;
@@ -66,9 +62,9 @@ module.exports = async (fileName) => {
   readStream.once('end', () => {
     const totalQuantity = goods.reduce((acc, current) => acc + current.quantity, 0);
     const outDir = `${OptimizedDir}/${fileName}`;
-    console.log('\n Total quantity =', totalQuantity);
+    console.log('Total quantity =', totalQuantity);
     fs.writeFile(outDir, JSON.stringify(goods), () => {
-      console.log(`\nFinish optimization file : ${fileName}`);
+      console.log(`Finish optimization file : ${fileName}`);
       fs.unlink(pathFile, () => {
         console.log(`File has been remover  ${pathFile} `);
       });
