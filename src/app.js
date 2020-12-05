@@ -1,5 +1,6 @@
 require('dotenv').config();
 const server = require('./server');
+const autoOptimize = require('./server/utils/moduleAuto');
 
 function gracefulShutdown() {
   const exitHandler = (error) => {
@@ -23,6 +24,7 @@ function gracefulShutdown() {
 function boot() {
   gracefulShutdown();
   server.start();
+  autoOptimize();
 }
 
 boot();

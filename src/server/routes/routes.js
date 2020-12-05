@@ -61,14 +61,24 @@ async function handleRoutes(request, response) {
 
   if (method === 'GET' && url === '/uploads') {
     const dir = path.resolve(process.env.UPLOAD_DIR);
-    const listFiles = fs.readdirSync(dir);
-    if (listFiles.length === 0) {
+    const optim = path.resolve(process.env.OPTIMIZED_DIR);
+    const uploadFiles = fs.readdirSync(dir);
+    const optinFiles = fs.readdirSync(optim);
+    const upResult = [...uploadFiles].filter((item) => item !== 'optimized');
+
+    if (upResult.length === 0 && optinFiles.length === 0) {
       return response.end(JSON.stringify({ status: 'no files ' }));
     }
-    const result = [...listFiles].filter((item) => item !== 'optimized');
-    return response.end(JSON.stringify(result));
+    if (upResult.length > 0) {
+      response.write(`\nlist of uploaded files \n${JSON.stringify(upResult)}`);
+    }
+    if (optinFiles.length > 0) {
+      response.write(`\nlist of optimize files  \n${JSON.stringify(optinFiles)}`);
+    } else {
+      response.write(`\nlist of optimize files : no files`);
+    }
+    return response.end(); // как тут правильно сделать??
   }
-
   return notFound(response);
 }
 
