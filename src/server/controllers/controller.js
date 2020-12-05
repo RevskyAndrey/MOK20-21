@@ -79,6 +79,7 @@ function optimizeJSON(response, fileName) {
   const result = listFiles.includes(fileName);
   if (result) {
     optimizeJson(fileName);
+    response.statusCode = 202;
     response.end(JSON.stringify(`starting optimization filename ${fileName} `));
     return;
   }
