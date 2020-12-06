@@ -25,8 +25,9 @@ module.exports = async function uploadCSV(inputStream) {
   const gunzip = createGunzip();
   const filePath = `${uploadDir}${dayToday()}-${Date.now()}-${nanoid(8)}.json`;
   const outputStream = fs.createWriteStream(filePath);
+  const createCsvToJson = csvToJson();
   try {
-    await promisifiedPipeline(inputStream, gunzip, csvToJson, outputStream);
+    await promisifiedPipeline(inputStream, gunzip, createCsvToJson, outputStream);
   } catch (err) {
     console.log('err', err);
   }
