@@ -6,4 +6,7 @@ module.exports = {
   uploadDir: process.env.UPLOAD_DIR || './uploads/',
   optimizedDir: process.env.OPTIMIZED_DIR || './uploads/optimized/',
   autoOptimizeTime: process.env.AUTO_OPTIMIZE_TIME || 1800000,
+  username: 'Masters' || 'admin',
+  password: 'Academy' || 'admin',
+  AuthorizationBasic: 'TWFzdGVyczpBY2FkZW15',
 };

@@ -1,19 +1,25 @@
 const express = require('express');
-// const requestHandler = require('./utils/requestHandler');
+const bodyParser = require('body-parser');
 // const autoOptimize = require('./server/utils/moduleAuto');
 const app = express();
 
-const task1 = require('./routes/task1');
-const task2 = require('./routes/task2');
-const task3 = require('./routes/task3');
-const discount = require('./routes/discount');
+const { task1, task2, task3, discount, uploads } = require('./routes');
 
-app.get('/', (req, res) => {
-  res.send('Home');
-});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use('/task1', task1);
 app.use('/task2', task2);
 app.use('/task3', task3);
 app.use('/products', discount);
+app.use('/uploads', uploads);
+
+app.get('/', (req, res) => {
+  res.send('Home');
+});
+
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
 
 module.exports = app;
