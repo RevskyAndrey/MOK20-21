@@ -66,4 +66,4 @@ function csvToJson() {
   return new Transform({ transform, flush });
 }
 
-module.exports = csvToJson();
+module.exports = csvToJson;
