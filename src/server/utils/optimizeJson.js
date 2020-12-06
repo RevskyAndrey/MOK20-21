@@ -14,14 +14,6 @@ function parserJson(data) {
   });
 }
 
-function checkOptimizedCatalogs() {
-  try {
-    fs.accessSync(OptimizedDir, fs.constants.F_OK);
-  } catch (err) {
-    fs.mkdirSync(OptimizedDir);
-  }
-}
-
 function optimizeArray(inputArray, outputArray) {
   inputArray.forEach((product) => {
     const { type, color, quantity, price } = product;
@@ -38,7 +30,6 @@ function optimizeArray(inputArray, outputArray) {
 }
 
 module.exports = async (fileName) => {
-  checkOptimizedCatalogs();
   const pathFile = `${process.env.UPLOAD_DIR}${fileName}`;
   const readStream = fs.createReadStream(pathFile, { encoding: 'utf8' });
   let itFirst = true;
@@ -62,11 +53,11 @@ module.exports = async (fileName) => {
   readStream.once('end', () => {
     const totalQuantity = goods.reduce((acc, current) => acc + current.quantity, 0);
     const outDir = `${OptimizedDir}/${fileName}`;
-    console.log('Total quantity =', totalQuantity);
+    console.log(' Total quantity =', totalQuantity);
     fs.writeFile(outDir, JSON.stringify(goods), () => {
-      console.log(`Finish optimization file : ${fileName}`);
+      console.log(`  Finish optimization file : ${fileName}`);
       fs.unlink(pathFile, () => {
-        console.log(`File has been remover  ${pathFile} `);
+        console.log(`   File has been remover  ${pathFile} `);
       });
     });
   });

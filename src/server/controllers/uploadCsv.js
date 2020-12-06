@@ -2,22 +2,12 @@ const { createGunzip } = require('zlib');
 const { pipeline } = require('stream');
 const { promisify } = require('util');
 const fs = require('fs');
-const path = require('path');
 
 const promisifiedPipeline = promisify(pipeline);
 
 const { nanoid } = require('nanoid');
 
 const csvToJson = require('../utils/csvToJson');
-
-function checkDownloadCatalogs() {
-  const uploadDir = path.resolve(process.env.UPLOAD_DIR);
-  try {
-    fs.accessSync(uploadDir, fs.constants.F_OK);
-  } catch (err) {
-    fs.mkdirSync(uploadDir);
-  }
-}
 
 function dayToday() {
   const today = new Date();
@@ -35,8 +25,6 @@ module.exports = async function uploadCSV(inputStream) {
   const gunzip = createGunzip();
   const filePath = `${uploadDir}${dayToday()}-${Date.now()}-${nanoid(8)}.json`;
   const outputStream = fs.createWriteStream(filePath);
-
-  checkDownloadCatalogs();
   try {
     await promisifiedPipeline(inputStream, gunzip, csvToJson, outputStream);
   } catch (err) {
