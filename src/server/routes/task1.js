@@ -5,10 +5,10 @@ const task1 = express.Router();
 const goods = require('../../goods.json');
 
 task1.get('/', (req, res) => {
-  const { field } = res.query;
-  const { value } = res.query;
-  const resultArr = firstTask(goods, field, value);
-  res.json(resultArr);
+  const { field } = req.query;
+  let { value } = req.query;
+  if (field === 'quantity') value = Number(value);
+  res.json(firstTask(goods, field, value));
 });
 
-module.export = task1;
+module.exports = task1;

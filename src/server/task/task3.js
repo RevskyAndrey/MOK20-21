@@ -1,7 +1,5 @@
-const { myMap } = require('./index');
-
 module.exports = (goods) => {
-  return myMap(goods, ({ type = 'N/A', color = 'N/A', quantity = 0, price, priceForPair }) => {
+  return goods.map(({ type = 'N/A', color = 'N/A', quantity = 0, price, priceForPair }) => {
     const cost = priceForPair || price;
     const isPair = !!priceForPair;
     const discount = 0;

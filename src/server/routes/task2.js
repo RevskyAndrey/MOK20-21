@@ -1,10 +1,10 @@
 const express = require('express');
-const { task2: maxCostTask } = require('../task');
+const { task2: secondTask } = require('../task');
 
 const task2 = express.Router();
 
 task2.get('/', (req, res) => {
-  res.json(maxCostTask);
+  res.json(secondTask);
 });
 
-module.export = task2;
+module.exports = task2;
