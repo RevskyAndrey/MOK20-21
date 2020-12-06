@@ -3,7 +3,7 @@ const path = require('path');
 
 const pathToFile = path.resolve(__dirname, '../', 'goods.json');
 
-const goods = require('../goods.json');
+const goods = require('../../goods.json');
 const {
   task1: firstTask,
   task2: secondTask,
@@ -12,12 +12,12 @@ const {
   myMap,
 } = require('../task');
 
+const optimizeJson = require('../utils/optimizeJson');
+
 let resultArr = [];
 
-function home(request, response) {
-  console.log(request);
-  response.write('Home');
-  response.end();
+function home(response) {
+  response.end('Home');
 }
 
 // 127.0.0.1:3000/task1?field=type&value=socks
@@ -45,29 +45,45 @@ function priceCalculation(price, discount) {
 
 // 127.0.0.1:3000/products/discounts
 async function discountAll(response) {
-  const newArr = thirdTask(goods);
-  const promiseGoods = myMap(newArr, async (item) => {
-    let discount = await discountForItem();
-    if (item.type === 'hat') {
-      discount += await discountForItem();
-      if (item.color === 'red') {
+  try {
+    const newArr = thirdTask(goods);
+    const promiseGoods = myMap(newArr, async (item) => {
+      let discount = await discountForItem();
+      if (item.type === 'hat') {
         discount += await discountForItem();
+        if (item.color === 'red') {
+          discount += await discountForItem();
+        }
       }
-    }
-    item.discount = `${discount}%`;
-    item.newPrice = `$ ${priceCalculation(item.price, discount)}`;
-    return item;
-  });
-  const newGoods = await Promise.all(promiseGoods);
-  response.end(JSON.stringify(newGoods));
+      item.discount = `${discount}%`;
+      item.newPrice = `$ ${priceCalculation(item.price, discount)}`;
+      return item;
+    });
+    const newGoods = await Promise.all(promiseGoods);
+    response.end(JSON.stringify(newGoods));
+  } catch (err) {
+    console.error(err);
+  }
 }
 
-// POST
-// 127.0.0.1:3000/changeJSON
+// POST  127.0.0.1:3000/changeJSON
 function changeJSON(data, response) {
   fs.writeFileSync(pathToFile, JSON.stringify(data, null, 1));
   response.write('Post result = ');
   response.end(JSON.stringify(data));
+}
+
+function optimizeJSON(response, fileName) {
+  const uploadDir = path.resolve(process.env.UPLOAD_DIR);
+  const listFiles = fs.readdirSync(uploadDir);
+  const result = listFiles.includes(fileName);
+  if (result) {
+    optimizeJson(fileName);
+    response.statusCode = 202;
+    response.end(JSON.stringify(`starting optimization filename ${fileName} `));
+    return;
+  }
+  response.end(JSON.stringify(` not found filename ${fileName}`));
 }
 
 module.exports = {
@@ -77,4 +93,5 @@ module.exports = {
   task3,
   discountAll,
   changeJSON,
+  optimizeJSON,
 };

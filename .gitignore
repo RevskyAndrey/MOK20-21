@@ -1,3 +1,7 @@
 .idea
 .env
-node_modules
+node_modules/
+temp/
+upload/
+uploads/
+csv-files/
