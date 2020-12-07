@@ -33,8 +33,8 @@ module.exports = async (fileName) => {
   let itFirst = true;
   let productFragment = '';
   const goods = [];
-  console.log(`Start file optimization ${pathFile}`);
-  readStream.on('error', (err) => console.error(err));
+  console.log(` INFO: Start file optimization ${pathFile}`);
+  readStream.on('error', (err) => console.error('ERROR:', err));
   readStream.on('data', (chunk) => {
     let data = chunk;
     if (itFirst) {
@@ -51,11 +51,11 @@ module.exports = async (fileName) => {
   readStream.once('end', () => {
     const totalQuantity = goods.reduce((acc, current) => acc + current.quantity, 0);
     const outDir = `${optimizedDir}/${fileName}`;
-    console.log('Total quantity =', totalQuantity);
+    console.log('  INFO: Total quantity =', totalQuantity);
     fs.writeFile(outDir, JSON.stringify(goods), () => {
-      console.log(`Finish optimization file : ${fileName}`);
+      console.log(`   INFO:  Finish optimization file : ${fileName}`);
       fs.unlink(pathFile, () => {
-        console.log(`File has been remover  ${pathFile} `);
+        console.log(`     INFO:  File has been remover  ${pathFile} `);
       });
     });
   });

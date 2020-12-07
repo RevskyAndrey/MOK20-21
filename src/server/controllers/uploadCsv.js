@@ -8,7 +8,7 @@ const { uploadDir } = require('../../config');
 
 const promisifiedPipeline = promisify(pipeline);
 
-const csvToJson = require('../utils/csvToJson');
+const createCsvToJson = require('../utils/csvToJson');
 
 function dayToday() {
   const today = new Date();
@@ -22,11 +22,12 @@ function dayToday() {
 }
 
 module.exports = async function uploadCSV(inputStream) {
-  const gunzip = createGunzip();
-  const filePath = `${uploadDir}${dayToday()}-${Date.now()}-${nanoid(8)}.json`;
-  const outputStream = fs.createWriteStream(filePath);
   try {
-    await promisifiedPipeline(inputStream, gunzip, csvToJson, outputStream);
+    const gunzip = createGunzip();
+    const filePath = `${uploadDir}${dayToday()}-${Date.now()}-${nanoid(8)}.json`;
+    const outputStream = fs.createWriteStream(`${filePath}`);
+    const csvToJson = createCsvToJson();
+    promisifiedPipeline(inputStream, gunzip, csvToJson, outputStream);
   } catch (err) {
     console.log('err', err);
   }
