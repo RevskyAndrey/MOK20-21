@@ -1,5 +1,6 @@
 const goods = require('../../goods.json');
 const { task3: thirdTask, discount: discountForItem, myMap } = require('../task');
+const errorHandler = require('../utils/gracefulShutdown');
 
 function priceCalculation(price, discount) {
   const cost = price.slice(1);
@@ -24,6 +25,6 @@ module.exports = async function discountAll(res) {
     const newGoods = await Promise.all(promiseGoods);
     res.json(newGoods);
   } catch (err) {
-    console.error(err);
+    errorHandler(res, err);
   }
 };

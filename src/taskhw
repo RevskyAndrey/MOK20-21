@@ -9,7 +9,7 @@ Homework 5
 
 3+ Переписати проект на express
 
-4- Створити мідлвару для Basic Auth
+4+ Створити мідлвару для Basic Auth
 { username: Masters, password: Academy}
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
