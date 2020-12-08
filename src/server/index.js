@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 
 const { task1, task2, task3, discount, uploads } = require('./routes');
 const auth = require('./middleware/auth');
-const errorHandler = require('../utils/gracefulShutdown');
+const errorHandler = require('./utils/gracefulShutdown');
 
 const app = express();
 
