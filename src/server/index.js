@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 
 const { task1, task2, task3, discount, uploads } = require('./routes');
 const auth = require('./middleware/auth');
+const errorHandler = require('../utils/gracefulShutdown');
 
 const app = express();
 
@@ -29,5 +30,7 @@ app.use((req, res, next) => {
   res.status(404).send('404 page not found check you URL and try again');
   next();
 });
+
+app.use(errorHandler);
 
 module.exports = app;
