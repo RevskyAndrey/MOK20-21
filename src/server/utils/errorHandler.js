@@ -1,6 +1,4 @@
-module.exports = (res, error) => {
-  res.status(500).json({
-    success: false,
-    message: error.message ? error.message : error,
-  });
+module.exports = (err, req, res, next) => {
+  res.status(500);
+  res.render('error', { error: err });
 };

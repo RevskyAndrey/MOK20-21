@@ -2,6 +2,7 @@ const fs = require('fs');
 const app = require('./server');
 const { port, uploadDir, optimizedDir } = require('./config');
 const autoOptimize = require('./server/utils/moduleAuto');
+const gracefulShutdown = require('./server/utils/errorHandler');
 
 function checkCatalogs(dir) {
   try {
@@ -12,6 +13,7 @@ function checkCatalogs(dir) {
 }
 
 function boot() {
+  gracefulShutdown();
   checkCatalogs(uploadDir);
   checkCatalogs(optimizedDir);
   autoOptimize();
