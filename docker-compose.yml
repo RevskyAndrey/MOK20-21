@@ -1,0 +1,21 @@
+version: '3.1'
+servises:
+  db:
+    container_name: db
+    image: postgres:13.1-alpine
+    environment:
+      POSTGRES_USER: main
+      POSTGRES_DB: main
+      POSTGRES_PASWORD: main
+    ports:
+     - 15432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  adminer:
+    conteiner_name: adminer
+    image: adminer
+    restart: always
+    ports:
+     - 18080:8080
+
