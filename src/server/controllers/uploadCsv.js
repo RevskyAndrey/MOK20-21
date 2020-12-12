@@ -2,10 +2,12 @@ const { createGunzip } = require('zlib');
 const { pipeline } = require('stream');
 const { promisify } = require('util');
 const fs = require('fs');
+const { nanoid } = require('nanoid');
+
+const { uploadDir } = require('../../config');
+const errorHandler = require('../utils/errorHandler');
 
 const promisifiedPipeline = promisify(pipeline);
-
-const { nanoid } = require('nanoid');
 
 const createCsvToJson = require('../utils/csvToJson');
 
@@ -21,14 +23,13 @@ function dayToday() {
 }
 
 module.exports = async function uploadCSV(inputStream) {
-  const uploadDir = process.env.UPLOAD_DIR;
-  const gunzip = createGunzip();
-  const filePath = `${uploadDir}${dayToday()}-${Date.now()}-${nanoid(8)}.json`;
-  const outputStream = fs.createWriteStream(filePath);
-  const csvToJson = createCsvToJson();
   try {
-    await promisifiedPipeline(inputStream, gunzip, csvToJson, outputStream);
+    const gunzip = createGunzip();
+    const filePath = `${uploadDir}${dayToday()}-${Date.now()}-${nanoid(8)}.json`;
+    const outputStream = fs.createWriteStream(`${filePath}`);
+    const csvToJson = createCsvToJson();
+    promisifiedPipeline(inputStream, gunzip, csvToJson, outputStream);
   } catch (err) {
-    console.log('err', err);
+    errorHandler(err);
   }
 };

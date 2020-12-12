@@ -1,43 +1,36 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-const requestHandler = require('./utils/requestHandler');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-const server = http.createServer(requestHandler);
-const OptimizedDir = path.resolve(process.env.OPTIMIZED_DIR);
-const uploadDir = path.resolve(process.env.UPLOAD_DIR);
+const { task1, task2, task3, discount, uploads } = require('./routes');
+const auth = require('./middleware/auth');
+const errorHandler = require('./utils/errorHandler');
 
-function checkCatalogs(dir) {
-  try {
-    fs.accessSync(dir, fs.constants.F_OK);
-  } catch (err) {
-    fs.mkdirSync(dir);
-  }
-}
+const app = express();
 
-function start() {
-  const port = Number(process.env.PORT) || 3000;
-  checkCatalogs(uploadDir);
-  checkCatalogs(OptimizedDir);
-  server.listen(port, () => {
-    console.log(`Server is listening on ${port}`);
-  });
-}
+app.use('/uploads', uploads);
 
-function stop(callback) {
-  server.close((err) => {
-    if (err) {
-      console.error(err, 'Failed to close server!');
-      callback();
-      return;
-    }
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-    console.log('Server has been stopped.');
-    callback();
-  });
-}
+app.use(auth);
+app.use('/task1', task1);
+app.use('/task2', task2);
+app.use('/task3', task3);
+app.use('/products', discount);
 
-module.exports = {
-  start,
-  stop,
-};
+app.get('/', (req, res) => {
+  res.send('Home');
+});
+
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
+app.use((req, res, next) => {
+  res.status(404).send('404 page not found check you URL and try again');
+  next();
+});
+
+app.use(errorHandler);
+
+module.exports = app;

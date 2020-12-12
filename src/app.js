@@ -1,30 +1,25 @@
-require('dotenv').config();
-const server = require('./server');
+const fs = require('fs');
+const app = require('./server');
+const { port, uploadDir, optimizedDir } = require('./config');
 const autoOptimize = require('./server/utils/moduleAuto');
+const gracefulShutdown = require('./server/utils/gracefulShutdown');
 
-function gracefulShutdown() {
-  const exitHandler = (error) => {
-    if (error) console.log(error);
-
-    console.log('Gracefully shutdown...');
-    server.stop(() => {
-      process.exit();
-    });
-  };
-  process.on('SIGINT', exitHandler);
-  process.on('SIGTERM', exitHandler);
-
-  process.on('SIGUSR1', exitHandler);
-  process.on('SIGUSR2', exitHandler);
-
-  process.on('uncaughtException', exitHandler);
-  process.on('unhandledRejection', exitHandler);
+function checkCatalogs(dir) {
+  try {
+    fs.accessSync(dir, fs.constants.F_OK);
+  } catch (err) {
+    fs.mkdirSync(dir);
+  }
 }
 
 function boot() {
   gracefulShutdown();
-  server.start();
+  checkCatalogs(uploadDir);
+  checkCatalogs(optimizedDir);
   autoOptimize();
+  app.listen(port, () => {
+    console.log(`INFO : Express server started and listening at http://localhost:${port}`);
+  });
 }
 
 boot();

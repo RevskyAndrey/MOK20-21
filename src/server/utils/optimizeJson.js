@@ -1,7 +1,5 @@
 const fs = require('fs');
-const path = require('path');
-
-const OptimizedDir = path.resolve(process.env.OPTIMIZED_DIR);
+const { optimizedDir, uploadDir } = require('../../config');
 
 function parserJson(data) {
   return data.map((product) => {
@@ -30,13 +28,13 @@ function optimizeArray(inputArray, outputArray) {
 }
 
 module.exports = async (fileName) => {
-  const pathFile = `${process.env.UPLOAD_DIR}${fileName}`;
+  const pathFile = `${uploadDir}${fileName}`;
   const readStream = fs.createReadStream(pathFile, { encoding: 'utf8' });
   let itFirst = true;
   let productFragment = '';
   const goods = [];
-  console.log(`Start file optimization ${pathFile}`);
-  readStream.on('error', (err) => console.error(err));
+  console.log(` INFO: Start file optimization ${pathFile}`);
+  readStream.on('error', (err) => console.error('ERROR:', err));
   readStream.on('data', (chunk) => {
     let data = chunk;
     if (itFirst) {
@@ -52,12 +50,12 @@ module.exports = async (fileName) => {
   });
   readStream.once('end', () => {
     const totalQuantity = goods.reduce((acc, current) => acc + current.quantity, 0);
-    const outDir = `${OptimizedDir}/${fileName}`;
-    console.log(' Total quantity =', totalQuantity);
+    const outDir = `${optimizedDir}/${fileName}`;
+    console.log('  INFO: Total quantity =', totalQuantity);
     fs.writeFile(outDir, JSON.stringify(goods), () => {
-      console.log(`  Finish optimization file : ${fileName}`);
+      console.log(`   INFO:  Finish optimization file : ${fileName}`);
       fs.unlink(pathFile, () => {
-        console.log(`   File has been remover  ${pathFile} `);
+        console.log(`     INFO:  File has been remover  ${pathFile} `);
       });
     });
   });
