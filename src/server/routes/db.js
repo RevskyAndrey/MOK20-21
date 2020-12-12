@@ -10,11 +10,16 @@ dbRouter.post('/create', (req, res) => {
   res.status(200).json(result);
 });
 
-dbRouter.put('/update/', (req, res) => {
-  // const { id } = req.params;
-  console.log(req.params);
-  // const result = db.getProduct(id);
-  // result.then((resolve) => res.status(200).json(resolve));
+// dbRouter.put('/update', (req, res) => {
+//   const { id, type, color, price, quantity } = req.query;
+//   console.log(req.params);
+// });
+
+dbRouter.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  db.deleteProduct(id);
+  res.status(202).json({ status: 'product deleted' });
 });
 
 dbRouter.get('/:id', (req, res) => {

@@ -16,9 +16,9 @@ function checkCatalogs(dir) {
 
 const boot = async () => {
   try {
-    // checkCatalogs(uploadDir);
-    // checkCatalogs(optimizedDir);
-    // autoOptimize();
+    checkCatalogs(uploadDir);
+    checkCatalogs(optimizedDir);
+    autoOptimize();
     app.listen(port, () => {
       console.log(`INFO: Express server started and listening at http://localhost:${port}`);
     });
@@ -27,6 +27,5 @@ const boot = async () => {
     console.error(err.message || err);
   }
 };
-
+gracefulShutdown();
 boot();
-gracefulShutdown(error);

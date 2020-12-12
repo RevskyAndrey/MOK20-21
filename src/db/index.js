@@ -88,7 +88,7 @@ module.exports = (config) => {
             values,
           );
 
-          console.log(`DeBUG: product updated  ${JSON.stringify(res.rows[0])}`);
+          console.log(`DEBUG: product updated  ${JSON.stringify(res.rows[0])}`);
         } catch (err) {
           console.error('update product failed', err.message || err);
           throw err;
@@ -101,7 +101,7 @@ module.exports = (config) => {
             throw new Error('ERROR: no product id defined');
           }
           // await client.query('DELETE FROM product WHERE id=$1', [id]);
-          await client.query(`UPDATE product SET deleted_at  = $1 WHERE id = $2`, [new Date(), id]);
+          await client.query(`UPDATE product SET deleted_at = $1 WHERE id = $2`, [new Date(), id]);
           return true;
         } catch (err) {
           console.error('delete product failed', err.message || err);
