@@ -2,6 +2,7 @@ const fs = require('fs');
 const app = require('./server');
 const { port, uploadDir, optimizedDir, db: dbConfig } = require('./config');
 const autoOptimize = require('./server/utils/moduleAuto');
+const gracefulShutdown = require('./server/utils/gracefulShutdown');
 
 const db = require('./db')(dbConfig);
 
@@ -28,3 +29,4 @@ const boot = async () => {
 };
 
 boot();
+gracefulShutdown(error);
