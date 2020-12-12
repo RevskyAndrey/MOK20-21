@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { task1, task2, task3, discount, uploads } = require('./routes');
+const { task1, task2, task3, discount, uploads, db } = require('./routes');
 const auth = require('./middleware/auth');
 
 const app = express();
@@ -16,6 +16,7 @@ app.use('/task1', task1);
 app.use('/task2', task2);
 app.use('/task3', task3);
 app.use('/products', discount);
+app.use('/db', db);
 
 app.get('/', (req, res) => {
   res.send('Home');

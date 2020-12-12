@@ -5,7 +5,7 @@ const fs = require('fs');
 const { nanoid } = require('nanoid');
 
 const { uploadDir } = require('../../config');
-const errorHandler = require('../utils/gracefulShutdown');
+const errorHandler = require('../utils/errorHandler');
 
 const promisifiedPipeline = promisify(pipeline);
 
@@ -30,6 +30,6 @@ module.exports = async function uploadCSV(inputStream) {
     const csvToJson = createCsvToJson();
     promisifiedPipeline(inputStream, gunzip, csvToJson, outputStream);
   } catch (err) {
-    errorHandler(res, err);
+    errorHandler(err);
   }
 };

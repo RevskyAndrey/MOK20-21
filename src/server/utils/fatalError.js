@@ -1,6 +1,6 @@
-module.export = {
+module.exports = {
   fatal: (message) => {
     console.error(message);
-    process.emit(1);
+    process.exit(1);
   },
 };
