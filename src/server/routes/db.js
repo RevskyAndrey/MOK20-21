@@ -4,9 +4,10 @@ const db = require('../../db')(dbConfig);
 
 const dbRouter = express.Router();
 
-dbRouter.get('/', (req, res) => {
-  db.getAllProduct().then((result) => {
-    res.status(200).json(result);
+dbRouter.get('/deleted/', (req, res) => {
+  db.getAllDeletedProduct().then((resolve) => {
+    console.log('db', resolve);
+    res.status(200).json(resolve);
   });
 });
 
@@ -16,18 +17,16 @@ dbRouter.get('/:id', (req, res) => {
   result.then((resolve) => res.status(200).json(resolve));
 });
 
-dbRouter.get('/deleted/', (req, res) => {
-  const result = db.getAllDeletedProduct;
-  result.then((resolve) => {
-    console.log(resolve);
-    res.status(200).json(resolve);
+dbRouter.get('/', (req, res) => {
+  db.getAllProduct().then((result) => {
+    res.status(200).json(result);
   });
 });
 
+
 dbRouter.post('/create', (req, res) => {
   const { type, color, price, quantity } = req.query;
-  const result = db.createProduct({ type, color, price, quantity });
-  res.status(200).json(result);
+  db.createProduct({ type, color, price, quantity }).then((result) => res.status(200).json(result));
 });
 
 // localhost:3000/db/update/10?type=socks&color=red&price=55&quantity=5

@@ -7,6 +7,17 @@ module.exports = (config) => {
     const name = `postgres`;
 
     return {
+      getAllDeletedProduct: async () => {
+        console.log('getAllDeletedProduct');
+        try {
+          const res = await client.query(`SELECT * FROM products WHERE "deleted_at" IS NOT NULL`);
+          return res.rows;
+        } catch (err) {
+          console.error('get  all product failed', err.message || err);
+          throw err;
+        }
+      },
+
       testConnection: async () => {
         try {
           console.log(`INFO: DB ${name} test connection OK`);
@@ -81,12 +92,13 @@ module.exports = (config) => {
 
           values.push(id);
           console.log(query, values);
-
+          console.log(query.join(','));
+          console.log(query.join(','));
           const res = await client.query(
-            `UPDATE product SET ${query.join(',')} WHERE id = $${values.length} RETURNING *`,
-            values,
+            `UPDATE products SET ${query.join(',')} WHERE id = $1 RETURNING *`,
+            [id],
           );
-          console.log(`DEBUG: product updated  ${JSON.stringify(res.rows[0])}`);
+          // console.log(`DEBUG: product updated  ${JSON.stringify(res.rows[0])}`);
           return res.rows[0];
         } catch (err) {
           console.error('update product failed', err.message || err);
@@ -112,16 +124,6 @@ module.exports = (config) => {
       getAllProduct: async () => {
         try {
           const res = await client.query(`SELECT * FROM products WHERE deleted_at IS NULL`);
-          return res.rows;
-        } catch (err) {
-          console.error('get  all product failed', err.message || err);
-          throw err;
-        }
-      },
-
-      getAllDeletedProduct: async () => {
-        try {
-          const res = await client.query(`SELECT * FROM products WHERE deleted_at IS NOT NULL`);
           return res.rows;
         } catch (err) {
           console.error('get  all product failed', err.message || err);
