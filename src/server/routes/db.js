@@ -17,7 +17,7 @@ dbRouter.get('/:id', (req, res) => {
   result.then((resolve) => res.status(200).json(resolve));
 });
 
-dbRouter.get('/', (req, res) => {
+dbRouter.get('//', (req, res) => {
   db.getAllProduct().then((result) => {
     res.status(200).json(result);
   });
@@ -31,9 +31,7 @@ dbRouter.post('/create', (req, res) => {
 // localhost:3000/db/update/10?type=socks&color=red&price=55&quantity=5
 dbRouter.put('/update/:id', (req, res) => {
   const { id } = req.params;
-  // const { type, color, price, quantity } = req.query;
   const data = req.query;
-
   db.updateProduct(id, data);
   res.status(202).json({ result: 'ok' });
 });
