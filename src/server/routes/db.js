@@ -23,7 +23,6 @@ dbRouter.get('/', (req, res) => {
   });
 });
 
-
 dbRouter.post('/create', (req, res) => {
   const { type, color, price, quantity } = req.query;
   db.createProduct({ type, color, price, quantity }).then((result) => res.status(200).json(result));
