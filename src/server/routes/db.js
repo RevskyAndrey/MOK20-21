@@ -4,22 +4,10 @@ const db = require('../../db')(dbConfig);
 
 const dbRouter = express.Router();
 
-dbRouter.post('/create', (req, res) => {
-  const { type, color, price, quantity } = req.query;
-  const result = db.createProduct({ type, color, price, quantity });
-  res.status(200).json(result);
-});
-
-// dbRouter.put('/update', (req, res) => {
-//   const { id, type, color, price, quantity } = req.query;
-//   console.log(req.params);
-// });
-
-dbRouter.delete('/:id', (req, res) => {
-  const { id } = req.params;
-  console.log(id);
-  db.deleteProduct(id);
-  res.status(202).json({ status: 'product deleted' });
+dbRouter.get('/', (req, res) => {
+  db.getAllProduct().then((result) => {
+    res.status(200).json(result);
+  });
 });
 
 dbRouter.get('/:id', (req, res) => {
@@ -28,8 +16,36 @@ dbRouter.get('/:id', (req, res) => {
   result.then((resolve) => res.status(200).json(resolve));
 });
 
-dbRouter.get('/', (req, res) => {
-  db.testConnection().then();
-  res.status(200).json({ status: 'DB test connection OK ' });
+dbRouter.get('/deleted/', (req, res) => {
+  const result = db.getAllDeletedProduct;
+  result.then((resolve) => {
+    console.log(resolve);
+    res.status(200).json(resolve);
+  });
 });
+
+dbRouter.post('/create', (req, res) => {
+  const { type, color, price, quantity } = req.query;
+  const result = db.createProduct({ type, color, price, quantity });
+  res.status(200).json(result);
+});
+
+// localhost:3000/db/update/10?type=socks&color=red&price=55&quantity=5
+dbRouter.put('/update/:id', (req, res) => {
+  const { id } = req.params;
+  // const { type, color, price, quantity } = req.query;
+  const data = req.query;
+
+  db.updateProduct(id, data);
+  res.status(202).json({ result: 'ok' });
+});
+
+dbRouter.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  db.deleteProduct(id).then((result) => {
+    if (result) res.status(202).json({ status: 'product deleted' });
+  });
+});
+
 module.exports = dbRouter;

@@ -62,12 +62,11 @@ module.exports = (config) => {
         }
       },
 
-      updateProduct: async ({ id, ...product }) => {
+      updateProduct: async (id, product) => {
         try {
           if (!id) {
             throw new Error('ERROR: no product id defined');
           }
-
           const query = [];
           const values = [];
 
@@ -76,19 +75,19 @@ module.exports = (config) => {
             query.push(`${k} = ${i + 1}`);
             values.push(v);
           }
-
           if (!values.length) {
             throw new Error('Error : Nothing to update');
           }
 
           values.push(id);
+          console.log(query, values);
 
           const res = await client.query(
             `UPDATE product SET ${query.join(',')} WHERE id = $${values.length} RETURNING *`,
             values,
           );
-
           console.log(`DEBUG: product updated  ${JSON.stringify(res.rows[0])}`);
+          return res.rows[0];
         } catch (err) {
           console.error('update product failed', err.message || err);
           throw err;
@@ -100,11 +99,32 @@ module.exports = (config) => {
           if (!id) {
             throw new Error('ERROR: no product id defined');
           }
-          // await client.query('DELETE FROM product WHERE id=$1', [id]);
-          await client.query(`UPDATE product SET deleted_at = $1 WHERE id = $2`, [new Date(), id]);
+          // working
+          // await client.query('DELETE FROM products WHERE id=$1', [id]);
+          await client.query(`UPDATE products SET deleted_at = $1 WHERE id = $2`, [new Date(), id]);
           return true;
         } catch (err) {
           console.error('delete product failed', err.message || err);
+          throw err;
+        }
+      },
+
+      getAllProduct: async () => {
+        try {
+          const res = await client.query(`SELECT * FROM products WHERE deleted_at IS NULL`);
+          return res.rows;
+        } catch (err) {
+          console.error('get  all product failed', err.message || err);
+          throw err;
+        }
+      },
+
+      getAllDeletedProduct: async () => {
+        try {
+          const res = await client.query(`SELECT * FROM products WHERE deleted_at IS NOT NULL`);
+          return res.rows;
+        } catch (err) {
+          console.error('get  all product failed', err.message || err);
           throw err;
         }
       },
