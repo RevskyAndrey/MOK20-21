@@ -53,7 +53,7 @@ function csvToJson() {
     }
 
     const result = makeProducts(namesProduct, csvRows);
-
+console.log(result)
     output += result.join(',\n');
 
     callback(null, output);
@@ -62,7 +62,7 @@ function csvToJson() {
   const flush = callback => {
     callback(null, '\n]');
   };
-
+z
   return new Transform({ transform, flush });
 }
 

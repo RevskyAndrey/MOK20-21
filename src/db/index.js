@@ -83,7 +83,7 @@ module.exports = (config) => {
 
           // eslint-disable-next-line no-restricted-syntax
           for (const [i, [k, v]] of Object.entries(product).entries()) {
-            query.push(`${k} = ${i + 1}`);
+            query.push(`${k} = $${i + 1}`);
             values.push(v);
           }
           if (!values.length) {
@@ -91,12 +91,11 @@ module.exports = (config) => {
           }
 
           values.push(id);
-          console.log(query, values);
-          console.log(query.join(','));
-          console.log(query.join(','));
+          const objectSet = `${query.join(',')}`;
+
           const res = await client.query(
-            `UPDATE products SET ${query.join(',')} WHERE id = $1 RETURNING *`,
-            [id],
+            `UPDATE products SET ${objectSet} WHERE id = $${values.length} RETURNING *`,
+            values,
           );
           // console.log(`DEBUG: product updated  ${JSON.stringify(res.rows[0])}`);
           return res.rows[0];

@@ -6,13 +6,12 @@ const auth = require('./middleware/auth');
 const errorHandler = require('./utils/errorHandler');
 
 const app = express();
-
+app.use(auth);
 app.use('/uploads', uploads);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(auth);
 app.use('/task1', task1);
 app.use('/task2', task2);
 app.use('/task3', task3);
