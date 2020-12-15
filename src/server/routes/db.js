@@ -1,18 +1,18 @@
 const express = require('express');
 const { db: dbConfig } = require('../../config');
 const db = require('../../db')(dbConfig);
-const uploadToDb = require('../controllers/uploadToDb');
+const uploadToDb = require('../controllers/uploadtoDb');
 
 const dbRouter = express.Router();
 
-dbRouter.get('/deleted/', (req, res) => {
+dbRouter.get('/deleted', (req, res) => {
   db.getAllDeletedProduct().then((resolve) => {
     console.log('db', resolve);
     res.status(200).json(resolve);
   });
 });
 
-dbRouter.post('/uploadCsv/', (req, res) => {
+dbRouter.put('/uploadCsv', (req, res) => {
   uploadToDb(req);
   res.status(200).json({ status: 'ok' });
 });

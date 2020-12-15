@@ -1,10 +1,11 @@
 const { Transform } = require('stream');
+const db = require('../../db')();
 
 function makeProducts(csvKeys, csvRows) {
   return csvRows.map(row => {
     const csvValues = row.split(',');
 
-    const productEntries = csvKeys.map( (key, i) => {
+    const productEntries = csvKeys.map((key, i) => {
 
       let value = csvValues[i] ?? 'N/A';
 
@@ -15,30 +16,26 @@ function makeProducts(csvKeys, csvRows) {
           value = 0;
         }
       }
-
       if (key === 'price') value = `$${value}`;
-
       return [key, value];
     });
-
-    const product = Object.fromEntries(productEntries);
-    return JSON.stringify(product);
+    productEntries.pop();
+    return Object.fromEntries(productEntries);
   });
 }
 
-function csvToJson() {
+
+function csvToDb() {
   let namesProduct;
   let productFragment;
+  let result = [];
 
   const transform = (chunk, encoding, callback) => {
     const csvRows = chunk.toString().split('\n');
-    let output = '';
 
     if (!namesProduct) {
       namesProduct = csvRows.shift().split(',');
-      output += '[\n';
-    } else {
-      output += ',\n';
+
     }
 
     if (productFragment) {
@@ -52,16 +49,22 @@ function csvToJson() {
       return;
     }
 
-    const result = makeProducts(namesProduct, csvRows);
-    output += result.join(',\n');
+    result = makeProducts(namesProduct, csvRows);
+    // console.table(result);
 
-    callback(null, output);
+    callback(null, null);
   };
 
   const flush = callback => {
-    callback(null, '\n]');
+    // result.forEach(async (item) => {
+    //  await db.createProduct(item);
+    // })
+    console.log('=>', result[0], typeof result[0]);
+    db.createProduct(result[0]);
+
+    callback(null, null);
   };
   return new Transform({ transform, flush });
 }
 
-module.exports = csvToJson;
+module.exports = csvToDb;

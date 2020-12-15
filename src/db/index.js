@@ -43,7 +43,6 @@ module.exports = (config) => {
             throw new Error('ERROR: no product color defined');
           }
           const timestamp = new Date();
-
           const res = await client.query(
             'INSERT INTO products(type, color, price, quantity, created_at, uprated_at, deleted_at) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
             [type, color, price, quantity, timestamp, timestamp, null],

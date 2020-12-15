@@ -5,15 +5,13 @@ const { promisify } = require('util');
 const errorHandler = require('../utils/errorHandler');
 
 const promisifiedPipeline = promisify(pipeline);
+const createCsvToDb = require('../utils/csvToDb');
 
-const createCsvToJson = require('../utils/csvToJson');
-
-module.exports = async function uploadfoDb(inputStream) {
+module.exports = async function uploadCSV(inputStream) {
   try {
     const gunzip = createGunzip();
-
-    const csvToJson = createCsvToJson();
-    promisifiedPipeline(inputStream, gunzip, csvToJson);
+    const csvToDb = createCsvToDb();
+    promisifiedPipeline(inputStream, gunzip, csvToDb);
   } catch (err) {
     errorHandler(err);
   }
