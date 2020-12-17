@@ -43,12 +43,14 @@ module.exports = (config) => {
             throw new Error('ERROR: no product color defined');
           }
           const timestamp = new Date();
+          console.log(type, color, price, quantity);
+          console.log(typeof quantity);
           const res = await client.query(
-            'INSERT INTO products(type, color, price, quantity, created_at, uprated_at, deleted_at) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            'INSERT INTO products(type, color, price, quantity, created_at, updated_at, deleted_at) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
             [type, color, price, quantity, timestamp, timestamp, null],
           );
 
-          // console.log(`Debug :New product created ${JSON.stringify(res.rows[0])}`);
+          console.log(`Debug :New product created ${JSON.stringify(res.rows[0])}`);
           return res.rows[0];
         } catch (err) {
           console.error('create product failed', err.message || err);

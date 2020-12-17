@@ -9,14 +9,14 @@ function makeProducts(csvKeys, csvRows) {
 
       let value = csvValues[i] ?? 'N/A';
 
-      if (key === 'quantity') {
-        value = Number.parseInt(csvValues[i], 10);
-        if (Number.isNaN(value)) {
-          console.error(`We have a problem. Invalid CSV quantity:`, value);
-          value = 0;
-        }
-      }
-      if (key === 'price') value = `$${value}`;
+      // if (key === 'quantity') {
+      //   value = Number.parseInt(csvValues[i], 10);
+      //   if (Number.isNaN(value)) {
+      //     console.error(`We have a problem. Invalid CSV quantity:`, value);
+      //     value = 0;
+      //   }
+      // }
+      if (key === 'price') value = `${value}`;
       return [key, value];
     });
     productEntries.pop();
