@@ -56,11 +56,11 @@ function csvToDb() {
   };
 
   const flush = callback => {
-    // result.forEach(async (item) => {
-    //  await db.createProduct(item);
-    // })
-    console.log('=>', result[0], typeof result[0]);
-    db.createProduct(result[0]);
+    result.forEach(async (item) => {
+     await db.createProduct(item);
+    })
+    // console.log('=>', result[0], typeof result[0]);
+    // db.createProduct(result[0]);
 
     callback(null, null);
   };
