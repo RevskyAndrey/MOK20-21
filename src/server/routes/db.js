@@ -1,6 +1,6 @@
 const express = require('express');
-const { db: dbConfig } = require('../../config');
-const db = require('../../db')(dbConfig);
+// const { db: dbConfig } = require('../../config');
+const db = require('../../db');
 const uploadToDb = require('../controllers/uploadtoDb');
 
 const dbRouter = express.Router();

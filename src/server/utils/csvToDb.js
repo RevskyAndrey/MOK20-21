@@ -1,5 +1,5 @@
 const { Transform } = require('stream');
-const db = require('../../db')();
+const db = require('../../db');
 
 function makeProducts(csvKeys, csvRows) {
   return csvRows.map(row => {
