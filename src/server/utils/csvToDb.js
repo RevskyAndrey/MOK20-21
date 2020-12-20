@@ -1,5 +1,7 @@
 const { Transform } = require('stream');
-const db = require('../../db')();
+const {  db: config } = require('../../config');
+
+const db = require('../../db')(config);
 
 function makeProducts(csvKeys, csvRows) {
   return csvRows.map(row => {
@@ -9,13 +11,6 @@ function makeProducts(csvKeys, csvRows) {
 
       let value = csvValues[i] ?? 'N/A';
 
-      // if (key === 'quantity') {
-      //   value = Number.parseInt(csvValues[i], 10);
-      //   if (Number.isNaN(value)) {
-      //     console.error(`We have a problem. Invalid CSV quantity:`, value);
-      //     value = 0;
-      //   }
-      // }
       if (key === 'price') value = `${value}`;
       return [key, value];
     });
@@ -59,8 +54,6 @@ function csvToDb() {
     result.forEach(async (item) => {
      await db.createProduct(item);
     })
-    // console.log('=>', result[0], typeof result[0]);
-    // db.createProduct(result[0]);
 
     callback(null, null);
   };
