@@ -24,7 +24,7 @@ dbRouter.get('/:id', (req, res) => {
 });
 
 dbRouter.get('/', (req, res) => {
-  db.getAllProduct().then((result) => {
+  db.getAllProducts().then((result) => {
     res.status(200).json(result);
   });
 });

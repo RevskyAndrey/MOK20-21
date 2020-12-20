@@ -57,11 +57,10 @@ module.exports = {
   //---------------------------
   testConnection: async () => funcWrapper(dbWrapper().testConnection)(),
   close: async () => funcWrapper(dbWrapper().close)(),
-  createTable: async () => funcWrapper(dbWrapper().createTable)(),
   createProduct: async (product) => funcWrapper(dbWrapper().createProduct)(product),
   getProduct: async (id) => funcWrapper(dbWrapper().getProduct)(id),
   getAllProducts: async () => funcWrapper(dbWrapper().getAllProducts)(),
   updateProduct: async (product) => funcWrapper(dbWrapper().updateProduct)(product),
-  getAllDeletedProduct: async () => funcWrapper(dbWrapper().getAllDeletedProduct)(),
+  getAllDeletedProducts: async () => funcWrapper(dbWrapper().getAllDeletedProducts)(),
   deleteProduct: async (id) => funcWrapper(dbWrapper().deleteProduct)(id),
 };

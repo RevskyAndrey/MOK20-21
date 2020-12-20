@@ -1,6 +1,6 @@
-const { Knex } = require('knex');
+const Knex = require('knex');
 
-const name = `knex`;
+const name = 'knex';
 
 module.exports = (config) => {
   const knex = new Knex(config);
@@ -95,7 +95,7 @@ module.exports = (config) => {
       }
     },
 
-    getAllProduct: async () => {
+    getAllProducts: async () => {
       try {
         const res = await knex('products').whereNull('deleted_at');
         return res;
@@ -105,8 +105,7 @@ module.exports = (config) => {
       }
     },
 
-    getAllDeletedProduct: async () => {
-      console.log('getAllDeletedProduct');
+    getAllDeletedProducts: async () => {
       try {
         const res = await knex('products').whereNotNull('deleted_at');
         return res;
