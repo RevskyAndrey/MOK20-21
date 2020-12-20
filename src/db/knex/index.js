@@ -24,18 +24,19 @@ module.exports = (config) => {
     createProduct: async (product) => {
       try {
         if (!product.type) {
-          throw new Error('ERROR: no product type defined');
+          throw new Error('ERROR: No product type defined!');
         }
         if (!product.color) {
-          throw new Error('ERROR: no product color defined');
+          throw new Error('ERROR: No product color defined!');
         }
-        const timestamp = new Date();
         const p = JSON.parse(JSON.stringify(product));
+        const timestamp = new Date();
+
         delete p.id;
         p.price = p.price || 0;
-        p.quantity = p.quantity || 1;
+        p.quantity = p.quantity || 0;
         p.created_at = timestamp;
-        p.uprated_at = timestamp;
+        p.updated_at = timestamp;
 
         const res = await knex('products').insert(p).returning('*');
 
