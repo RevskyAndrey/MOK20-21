@@ -1,67 +1,52 @@
 const { Transform } = require('stream');
+const {  db: config } = require('../../config');
+
+const db = require('../../db');
 
 function makeProducts(csvKeys, csvRows) {
   return csvRows.map(row => {
     const csvValues = row.split(',');
 
-    const productEntries = csvKeys.map( (key, i) => {
+    const productEntries = csvKeys.map((key, i) => {
 
       let value = csvValues[i] ?? 'N/A';
 
-      if (key === 'quantity') {
-        value = Number.parseInt(csvValues[i], 10);
-        if (Number.isNaN(value)) {
-          console.error(`We have a problem. Invalid CSV quantity:`, value);
-          value = 0;
-        }
-      }
-
-      if (key === 'price') value = `$${value}`;
-
+      if (key === 'price') value = `${value}`;
       return [key, value];
     });
-
-    const product = Object.fromEntries(productEntries);
-    return JSON.stringify(product);
+    productEntries.pop();
+    return Object.fromEntries(productEntries);
   });
 }
 
-function csvToJson() {
+function csvToDb() {
   let namesProduct;
   let productFragment;
+  let result = [];
 
   const transform = (chunk, encoding, callback) => {
     const csvRows = chunk.toString().split('\n');
-    let output = '';
-
     if (!namesProduct) {
       namesProduct = csvRows.shift().split(',');
-      output += '[\n';
-    } else {
-      output += ',\n';
     }
-
     if (productFragment) {
       csvRows[0] = `${productFragment}${csvRows[0]}`;
     }
-
     productFragment = csvRows.pop();
-
     if (csvRows.length === 0) {
       callback(null, '');
       return;
     }
-
-    const result = makeProducts(namesProduct, csvRows);
-    output += result.join(',\n');
-
-    callback(null, output);
+    result = makeProducts(namesProduct, csvRows);
+    callback(null, null);
   };
 
   const flush = callback => {
-    callback(null, '\n]');
+    result.forEach(async (item) => {
+     await db.createProduct(item);
+    })
+    callback(null, null);
   };
   return new Transform({ transform, flush });
 }
-
-module.exports = csvToJson;
+module.exports = csvToDb;

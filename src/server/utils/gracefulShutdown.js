@@ -1,13 +1,11 @@
-const app = require('..');
+const db = require('../../db');
 
 module.exports = () => {
   const exitHandler = (error) => {
     if (error) console.log(error);
-
     console.log('Gracefully shutdown...');
-    app.stop(() => {
-      process.exit();
-    });
+    db.close();
+    process.exit();
   };
   process.on('SIGINT', exitHandler);
   process.on('SIGTERM', exitHandler);
