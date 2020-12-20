@@ -12,7 +12,8 @@ module.exports = async function uploadCSV(inputStream) {
     const gunzip = createGunzip();
     const csvToDb = createCsvToDb();
     promisifiedPipeline(inputStream, gunzip, csvToDb);
+    return true;
   } catch (err) {
-    errorHandler(err);
+    return errorHandler(err);
   }
 };

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const app = require('./server');
 const { port, uploadDir, optimizedDir } = require('./config');
-// const autoOptimize = require('./server/utils/moduleAuto');
+const autoOptimize = require('./server/utils/moduleAuto');
 const gracefulShutdown = require('./server/utils/gracefulShutdown');
 
 const db = require('./db');
@@ -18,7 +18,7 @@ const boot = async () => {
   try {
     checkCatalogs(uploadDir);
     checkCatalogs(optimizedDir);
-    // autoOptimize();
+    autoOptimize();
     app.listen(port, () => {
       console.log(`INFO: Express server started and listening at http://localhost:${port}`);
     });
