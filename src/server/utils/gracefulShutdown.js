@@ -1,5 +1,4 @@
-const { db: dbConfig } = require('../../config');
-const db = require('../../db')(dbConfig);
+const db = require('../../db');
 
 module.exports = () => {
   const exitHandler = (error) => {

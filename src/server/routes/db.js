@@ -1,6 +1,5 @@
 const express = require('express');
-const { db: dbConfig } = require('../../config');
-const db = require('../../db')(dbConfig);
+const db = require('../../db');
 const uploadToDb = require('../controllers/uploadtoDb');
 
 const dbRouter = express.Router();
@@ -13,8 +12,10 @@ dbRouter.get('/deleted', (req, res) => {
 });
 
 dbRouter.put('/uploadCsv', (req, res) => {
-  uploadToDb(req);
-  res.status(200).json({ status: 'ok' });
+  const result = uploadToDb(req);
+  result.then((resolve) => {
+    if (resolve) res.status(201).json({ status: 'file uploaded' });
+  });
 });
 
 dbRouter.get('/:id', (req, res) => {
