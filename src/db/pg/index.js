@@ -1,7 +1,11 @@
 const { Pool } = require('pg');
-const { db: config } = require('../../config');
+const {
+  db: {
+    config: { pg: configPg },
+  },
+} = require('../../config');
 
-const client = new Pool(config);
+const client = new Pool(configPg);
 const name = `postgres`;
 
 async function testConnection() {
@@ -117,7 +121,7 @@ async function getAllProducts() {
   }
 }
 
-async function getAllDeletedProduct() {
+async function getAllDeletedProducts() {
   console.log('getAllDeletedProduct');
   try {
     const res = await client.query(`SELECT * FROM products WHERE "deleted_at" IS NOT NULL`);
@@ -128,13 +132,15 @@ async function getAllDeletedProduct() {
   }
 }
 
-module.exports = {
-  testConnection,
-  close,
-  createProduct,
-  getProduct,
-  updateProduct,
-  deleteProduct,
-  getAllProducts,
-  getAllDeletedProduct,
+module.exports = () => {
+  return {
+    testConnection,
+    close,
+    createProduct,
+    getProduct,
+    updateProduct,
+    deleteProduct,
+    getAllProducts,
+    getAllDeletedProducts,
+  };
 };

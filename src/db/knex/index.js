@@ -7,29 +7,34 @@ const {
 
 const knex = new Knex(configKnex);
 const name = 'knex';
-const tablets = ['products', 'colors', 'types'];
-
-async function removeTablet(tabletName) {
-  try {
-    await knex.schema.dropTable(tabletName);
-  } catch (err) {
-    console.error('removeTablet failed', err.message || err);
-    throw err;
-  }
-}
-
-async function removeAllTablets() {
-  try {
-    tablets.forEach((item) => removeTablet(item));
-  } catch (err) {
-    console.error(`remove All Tablets failed`, err.message || err);
-    throw err;
-  }
-}
 
 async function createTablesDb() {
   try {
-    removeAllTablets();
+    if (await !knex.schema.hasTable('type')) {
+      await knex.schema.createTable('type', (table) => {
+        table.increments();
+        table.string('type');
+        table.timestamps();
+      });
+    }
+
+    if (await !knex.schema.hasTable('color')) {
+      await knex.schema.createTable('color', (table) => {
+        table.increments();
+        table.string('color');
+        table.timestamps();
+      });
+    }
+
+    if (await !knex.schema.hasTable('products')) {
+      await knex.schema.createTable('products', (table) => {
+        table.increments();
+        table.string('price');
+        table.string('quantity');
+        table.timestamps();
+        table.timestamp('deleted_at').nullable().defaultTo(null);
+      });
+    }
   } catch (err) {
     console.error('createTablesDb failed', err.message || err);
     throw err;
@@ -39,8 +44,8 @@ async function createTablesDb() {
 async function testConnection() {
   try {
     console.log(`INFO: DB ${name} test connection OK`);
-    await knex.raw('SELECT NOW()');
     await createTablesDb();
+    await knex.raw('SELECT NOW()');
   } catch (err) {
     console.error('ERROR: test connection failed', err.message || err);
     throw err;

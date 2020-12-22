@@ -23,7 +23,7 @@ const init = async () => {
       db[k] = wrapper;
     }
   } catch (err) {
-    console.log('FATAL: ', err.message || err);
+    console.log('FATAL init: ', err.message || err);
   }
 };
 
