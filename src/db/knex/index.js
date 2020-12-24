@@ -7,44 +7,11 @@ const {
 
 const knex = new Knex(configKnex);
 const name = 'knex';
-
-async function createTablesDb() {
-  try {
-    if (await !knex.schema.hasTable('type')) {
-      await knex.schema.createTable('type', (table) => {
-        table.increments();
-        table.string('type');
-        table.timestamps();
-      });
-    }
-
-    if (await !knex.schema.hasTable('color')) {
-      await knex.schema.createTable('color', (table) => {
-        table.increments();
-        table.string('color');
-        table.timestamps();
-      });
-    }
-
-    if (await !knex.schema.hasTable('products')) {
-      await knex.schema.createTable('products', (table) => {
-        table.increments();
-        table.string('price');
-        table.string('quantity');
-        table.timestamps();
-        table.timestamp('deleted_at').nullable().defaultTo(null);
-      });
-    }
-  } catch (err) {
-    console.error('createTablesDb failed', err.message || err);
-    throw err;
-  }
-}
+const timestamp = new Date();
 
 async function testConnection() {
   try {
     console.log(`INFO: DB ${name} test connection OK`);
-    await createTablesDb();
     await knex.raw('SELECT NOW()');
   } catch (err) {
     console.error('ERROR: test connection failed', err.message || err);
@@ -57,6 +24,34 @@ async function close() {
   // no close for knex
 }
 
+async function createType(type) {
+  try {
+    const item = {};
+    item.type = type;
+    item.created_at = timestamp;
+    item.updated_at = timestamp;
+    const res = await knex('types').insert(item).returning('*');
+    return res[0];
+  } catch (err) {
+    console.error('create type failed', err.message || err);
+    throw err;
+  }
+}
+
+async function createColor(color) {
+  try {
+    const item = {};
+    item.color = color;
+    item.created_at = timestamp;
+    item.updated_at = timestamp;
+    const res = await knex('colors').insert(item).returning('*');
+    return res[0];
+  } catch (err) {
+    console.error('create color failed', err.message || err);
+    throw err;
+  }
+}
+
 async function createProduct(product) {
   try {
     if (!product.type) {
@@ -66,20 +61,50 @@ async function createProduct(product) {
       throw new Error('ERROR: No product color defined!');
     }
     const p = JSON.parse(JSON.stringify(product));
-    const timestamp = new Date();
-
+    const type = await createType(p.type);
+    const color = await createColor(p.color);
     delete p.id;
+    delete p.type;
+    delete p.color;
     p.price = p.price || 0;
-    p.quantity = p.quantity || 0;
+    p.quantity = p.quantity || 1;
     p.created_at = timestamp;
     p.updated_at = timestamp;
-
+    p.type_id = type.id;
+    p.color_id = color.id;
     const res = await knex('products').insert(p).returning('*');
 
     console.log(`Debug :New product created ${JSON.stringify(res[0])}`);
     return res[0];
   } catch (err) {
     console.error('create product failed', err.message || err);
+    throw err;
+  }
+}
+
+async function getType(id) {
+  try {
+    if (!id) {
+      throw new Error('ERROR: no product id defined');
+    }
+    const res = await knex('types').where('id', id).whereNull('deleted_at');
+
+    return res[0];
+  } catch (err) {
+    console.error('get type failed', err.message || err);
+    throw err;
+  }
+}
+async function getColor(id) {
+  try {
+    if (!id) {
+      throw new Error('ERROR: no product id defined');
+    }
+    const res = await knex('colors').where('id', id).whereNull('deleted_at');
+
+    return res[0];
+  } catch (err) {
+    console.error('get color failed', err.message || err);
     throw err;
   }
 }
