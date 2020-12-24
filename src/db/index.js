@@ -60,7 +60,20 @@ module.exports = {
   createProduct: async (product) => funcWrapper(dbWrapper().createProduct)(product),
   getProduct: async (id) => funcWrapper(dbWrapper().getProduct)(id),
   getAllProducts: async () => funcWrapper(dbWrapper().getAllProducts)(),
-  updateProduct: async (product) => funcWrapper(dbWrapper().updateProduct)(product),
+  updateProduct: async (id, product) => funcWrapper(dbWrapper().updateProduct)(id, product),
   getAllDeletedProducts: async () => funcWrapper(dbWrapper().getAllDeletedProducts)(),
   deleteProduct: async (id) => funcWrapper(dbWrapper().deleteProduct)(id),
+  //---------------------------
+  getTypeProduct: async (id) => funcWrapper(dbWrapper().getTypeProduct)(id),
+  getAllTypesProducts: async () => funcWrapper(dbWrapper().getAllTypesProducts)(),
+  // eslint-disable-next-line no-shadow
+  updateTypeProduct: async (id, type) => funcWrapper(dbWrapper().updateTypeProduct)(id, type),
+  deleteTypeProduct: async (id) => funcWrapper(dbWrapper().deleteTypeProduct)(id),
+  getAllDeletedTypesProducts: async () => funcWrapper(dbWrapper().getAllDeletedTypesProducts)(),
+  //----------
+  getColorProduct: async (id) => funcWrapper(dbWrapper().getColorProduct)(id),
+  getAllcolorsProducts: async () => funcWrapper(dbWrapper().getAllcolorsProducts)(),
+  updateColorProduct: async (id, color) => funcWrapper(dbWrapper().updateColorProduct)(id, color),
+  deleteColorProduct: async (id) => funcWrapper(dbWrapper().deleteColorProduct)(id),
+  getAllDeletedColorsProducts: async () => funcWrapper(dbWrapper().getAllDeletedColorsProducts)(),
 };

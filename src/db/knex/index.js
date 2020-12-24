@@ -82,7 +82,7 @@ async function createProduct(product) {
   }
 }
 
-async function getType(id) {
+async function getTypeProduct(id) {
   try {
     if (!id) {
       throw new Error('ERROR: no product id defined');
@@ -95,7 +95,8 @@ async function getType(id) {
     throw err;
   }
 }
-async function getColor(id) {
+
+async function getColorProduct(id) {
   try {
     if (!id) {
       throw new Error('ERROR: no product id defined');
@@ -115,10 +116,45 @@ async function getProduct(id) {
       throw new Error('ERROR: no product id defined');
     }
     const res = await knex('products').where('id', id).whereNull('deleted_at');
-
     return res[0];
   } catch (err) {
     console.error('get product failed', err.message || err);
+    throw err;
+  }
+}
+
+async function updateTypeProduct(id, type) {
+  try {
+    if (!id) {
+      throw new Error('ERROR: no product id defined');
+    }
+    if (!type) {
+      throw new Error('Error : Nothing to update');
+    }
+
+    const res = await knex('types').update(type).where('id', id).returning('*');
+    console.log(`Debug: product update ${JSON.stringify(res[0])}`);
+    return res[0];
+  } catch (err) {
+    console.error('updateTypeProduct failed', err.message || err);
+    throw err;
+  }
+}
+
+async function updateColorProduct(id, color) {
+  try {
+    if (!id) {
+      throw new Error('ERROR: no product id defined');
+    }
+    if (!color) {
+      throw new Error('Error : Nothing to update');
+    }
+
+    const res = await knex('colors').update(color).where('id', id).returning('*');
+    console.log(`Debug: product update ${JSON.stringify(res[0])}`);
+    return res[0];
+  } catch (err) {
+    console.error('updateColorProduct failed', err.message || err);
     throw err;
   }
 }
@@ -128,11 +164,9 @@ async function updateProduct(id, product) {
     if (!id) {
       throw new Error('ERROR: no product id defined');
     }
-
     if (!Object.keys(product).length) {
       throw new Error('Error : Nothing to update');
     }
-
     const res = await knex('products').update(product).where('id', id).returning('*');
     console.log(`Debug: product update ${JSON.stringify(res[0])}`);
     return res[0];
@@ -141,7 +175,6 @@ async function updateProduct(id, product) {
     throw err;
   }
 }
-
 async function deleteProduct(id) {
   try {
     if (!id) {
@@ -156,7 +189,53 @@ async function deleteProduct(id) {
     throw err;
   }
 }
+async function deleteTypeProduct(id) {
+  try {
+    if (!id) {
+      throw new Error('ERROR: no product id defined');
+    }
+    //  await knex('types').where('id', id).del();
+    await knex('types').where('id', id).update('deleted_at', new Date());
 
+    return true;
+  } catch (err) {
+    console.error('deleteTypeProduct failed', err.message || err);
+    throw err;
+  }
+}
+async function deleteColorProduct(id) {
+  try {
+    if (!id) {
+      throw new Error('ERROR: no product id defined');
+    }
+    //  await knex('colors').where('id', id).del();
+    await knex('colors').where('id', id).update('deleted_at', new Date());
+
+    return true;
+  } catch (err) {
+    console.error('deleteColorProduct failed', err.message || err);
+    throw err;
+  }
+}
+
+async function getAllTypesProducts() {
+  try {
+    const res = await knex('types').whereNull('deleted_at');
+    return res;
+  } catch (err) {
+    console.error('getAllTypesProducts failed', err.message || err);
+    throw err;
+  }
+}
+async function getAllcolorsProducts() {
+  try {
+    const res = await knex('products').whereNull('deleted_at');
+    return res;
+  } catch (err) {
+    console.error('get All colors Products failed', err.message || err);
+    throw err;
+  }
+}
 async function getAllProducts() {
   try {
     const res = await knex('products').whereNull('deleted_at');
@@ -167,12 +246,30 @@ async function getAllProducts() {
   }
 }
 
+async function getAllDeletedTypesProducts() {
+  try {
+    const res = await knex('types').whereNotNull('deleted_at');
+    return res;
+  } catch (err) {
+    console.error('getAllDeletedTypesProducts failed', err.message || err);
+    throw err;
+  }
+}
+async function getAllDeletedColorsProducts() {
+  try {
+    const res = await knex('colors').whereNotNull('deleted_at');
+    return res;
+  } catch (err) {
+    console.error('getAllDeletedColorsProducts failed', err.message || err);
+    throw err;
+  }
+}
 async function getAllDeletedProducts() {
   try {
     const res = await knex('products').whereNotNull('deleted_at');
     return res;
   } catch (err) {
-    console.error('get  all product failed', err.message || err);
+    console.error('get  all deletes product failed', err.message || err);
     throw err;
   }
 }
@@ -187,5 +284,16 @@ module.exports = () => {
     deleteProduct,
     getAllProducts,
     getAllDeletedProducts,
+    //---
+    getTypeProduct,
+    getColorProduct,
+    updateTypeProduct,
+    updateColorProduct,
+    deleteTypeProduct,
+    deleteColorProduct,
+    getAllTypesProducts,
+    getAllcolorsProducts,
+    getAllDeletedTypesProducts,
+    getAllDeletedColorsProducts,
   };
 };
