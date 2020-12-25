@@ -2,6 +2,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable global-require */
+/* eslint-disable no-shadow */
 const {
   db: { config, defaultType },
 } = require('../config');
@@ -63,17 +64,26 @@ module.exports = {
   updateProduct: async (id, product) => funcWrapper(dbWrapper().updateProduct)(id, product),
   getAllDeletedProducts: async () => funcWrapper(dbWrapper().getAllDeletedProducts)(),
   deleteProduct: async (id) => funcWrapper(dbWrapper().deleteProduct)(id),
-  //---------------------------
-  getTypeProduct: async (id) => funcWrapper(dbWrapper().getTypeProduct)(id),
+  // ------------ type ---------------
+  createTypeProduct: async (type) => funcWrapper(dbWrapper().createTypeProduct)(type),
+  getTypeProductId: async (id) => funcWrapper(dbWrapper().getTypeProductId)(id),
+
+  getTypeProductTypename: async (typename) =>
+    funcWrapper(dbWrapper().getTypeProductTypename)(typename),
+
+  getAllDeletedTypesProducts: async () => funcWrapper(dbWrapper().getAllDeletedTypesProducts)(),
   getAllTypesProducts: async () => funcWrapper(dbWrapper().getAllTypesProducts)(),
-  // eslint-disable-next-line no-shadow
   updateTypeProduct: async (id, type) => funcWrapper(dbWrapper().updateTypeProduct)(id, type),
   deleteTypeProduct: async (id) => funcWrapper(dbWrapper().deleteTypeProduct)(id),
-  getAllDeletedTypesProducts: async () => funcWrapper(dbWrapper().getAllDeletedTypesProducts)(),
-  //----------
-  getColorProduct: async (id) => funcWrapper(dbWrapper().getColorProduct)(id),
+  // ---------- color ----------
+  createColorProduct: async (color) => funcWrapper(dbWrapper().createColorProduct)(color),
+  getColorProductId: async (id) => funcWrapper(dbWrapper().getColorProductId)(id),
+
+  getColorProductColorname: async (colorname) =>
+    funcWrapper(dbWrapper().getColorProductColorname)(colorname),
+
+  getAllDeletedColorsProducts: async () => funcWrapper(dbWrapper().getAllDeletedColorsProducts)(),
   getAllcolorsProducts: async () => funcWrapper(dbWrapper().getAllcolorsProducts)(),
   updateColorProduct: async (id, color) => funcWrapper(dbWrapper().updateColorProduct)(id, color),
   deleteColorProduct: async (id) => funcWrapper(dbWrapper().deleteColorProduct)(id),
-  getAllDeletedColorsProducts: async () => funcWrapper(dbWrapper().getAllDeletedColorsProducts)(),
 };

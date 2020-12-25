@@ -28,7 +28,7 @@ module.exports = {
           min: 2,
           max: 10,
         },
-        debug: true,
+        debug: false,
       },
       pg: {
         user: process.env.DB_USER || fatal('FATAL : DB_USER is not defined'),

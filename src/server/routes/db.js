@@ -5,7 +5,7 @@ const uploadToDb = require('../controllers/uploadtoDb');
 const dbRouter = express.Router();
 
 dbRouter.get('/deleted', (req, res) => {
-  db.getAllDeletedProduct().then((resolve) => {
+  db.getAllDeletedProducts().then((resolve) => {
     console.log('db', resolve);
     res.status(200).json(resolve);
   });
