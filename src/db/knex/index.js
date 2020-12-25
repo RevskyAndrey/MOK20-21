@@ -26,16 +26,11 @@ async function close() {
 
 async function createTypeProduct(type) {
   try {
-    let res;
-    if (type) {
-      const item = {};
-      item.type = type;
-      item.created_at = timestamp;
-      item.updated_at = timestamp;
-      res = await knex('types').insert(item).returning('*');
-      return res[0];
-    }
-    res[0].id = null;
+    const item = {};
+    item.type = type;
+    item.created_at = timestamp;
+    item.updated_at = timestamp;
+    const res = await knex('types').insert(item).returning('*');
     return res[0];
   } catch (err) {
     console.error('create type failed', err.message || err);
@@ -45,16 +40,11 @@ async function createTypeProduct(type) {
 
 async function createColorProduct(color) {
   try {
-    let res;
-    if (color) {
-      const item = {};
-      item.color = color;
-      item.created_at = timestamp;
-      item.updated_at = timestamp;
-      res = await knex('colors').insert(item).returning('*');
-      return res[0];
-    }
-    res[0].id = null;
+    const item = {};
+    item.color = color;
+    item.created_at = timestamp;
+    item.updated_at = timestamp;
+    const res = await knex('colors').insert(item).returning('*');
     return res[0];
   } catch (err) {
     console.error('create color failed', err.message || err);
@@ -66,12 +56,13 @@ async function createProduct(product) {
   try {
     if (!product.type) {
       console.log('ERROR: No product type defined!');
-      product.type = false;
+      return { status: 'ERROR: No product type defined!' };
     }
     if (!product.color) {
       console.log('ERROR: No product color defined!');
-      product.color = false;
-    }
+      return { status: 'ERROR: No product color defined!' };
+    }fix
+
     const p = JSON.parse(JSON.stringify(product));
     const type = await createTypeProduct(p.type);
     const color = await createColorProduct(p.color);
