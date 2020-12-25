@@ -61,7 +61,7 @@ async function createProduct(product) {
     if (!product.color) {
       console.log('ERROR: No product color defined!');
       return { status: 'ERROR: No product color defined!' };
-    }fix
+    }
 
     const p = JSON.parse(JSON.stringify(product));
     const type = await createTypeProduct(p.type);
