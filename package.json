@@ -24,7 +24,10 @@
   },
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon src/app.js",
+    "sequelize:migrate:make": "./node_modules/.bin/sequelize --migrations-path=./src/db/sequelize/migrations  migration:generate --name CreateProductsTable",
+    "sequelize:migrate:latest": "./node_modules/.bin/sequelize --migrations-path=./src/db/sequelize/migrations --config=./src/db/sequelize/config/config.js db:migrate",
+    "sequelize:migrate:undo": "./node_modules/.bin/sequelize --migrations-path=./src/db/sequelize/migrations --config=./src/db/sequelize/config/config.js db:migrate:undo"
   },
   "author": "Revsky A",
   "license": "ISC"
