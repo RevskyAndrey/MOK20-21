@@ -73,8 +73,8 @@ async function createProduct(product) {
     p.quantity = p.quantity || 1;
     p.created_at = timestamp;
     p.updated_at = timestamp;
-    p.type_id = type.id;
-    p.color_id = color.id;
+    p.type_id = await type.id;
+    p.color_id = await color.id;
     const res = await knex('products').insert(p).returning('*');
 
     console.log(`Debug :New product created ${JSON.stringify(res[0])}`);
@@ -162,7 +162,7 @@ async function updateTypeProduct(id, type) {
     if (!type) {
       throw new Error('Error : Nothing to update');
     }
-
+    type.updated_at = timestamp;
     const res = await knex('types').update(type).where('id', id).returning('*');
     console.log(`Debug: product update ${JSON.stringify(res[0])}`);
     return res[0];
@@ -180,7 +180,7 @@ async function updateColorProduct(id, color) {
     if (!color) {
       throw new Error('Error : Nothing to update');
     }
-
+    color.updated_at = timestamp;
     const res = await knex('colors').update(color).where('id', id).returning('*');
     console.log(`Debug: product update ${JSON.stringify(res[0])}`);
     return res[0];
@@ -198,6 +198,7 @@ async function updateProduct(id, product) {
     if (!Object.keys(product).length) {
       throw new Error('Error : Nothing to update');
     }
+    product.updated_at = timestamp;
     const res = await knex('products').update(product).where('id', id).returning('*');
     console.log(`Debug: product update ${JSON.stringify(res[0])}`);
     return res[0];
