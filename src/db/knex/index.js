@@ -313,6 +313,8 @@ async function getAllDeletedProducts() {
   }
 }
 
+async function createUser() {}
+
 module.exports = () => {
   return {
     testConnection,

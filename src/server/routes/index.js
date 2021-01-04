@@ -6,5 +6,6 @@ const uploads = require('./uploads');
 const db = require('./db');
 const dbType = require('./dbType');
 const dbColor = require('./dbColor');
+const auth = require('./auth');
 
-module.exports = { task1, task2, task3, discount, uploads, db, dbType, dbColor };
+module.exports = { task1, task2, task3, discount, uploads, db, dbType, dbColor, auth };
