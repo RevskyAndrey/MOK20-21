@@ -3,7 +3,6 @@ exports.up = async (knex) => {
     table.increments().primary();
     table.string('username').notNullable();
     table.string('password').notNullable();
-    table.string('accessToken').nullable();
     table.string('refreshToken').nullable();
     table.timestamp('deleted_at').nullable();
     table.timestamps();

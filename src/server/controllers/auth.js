@@ -5,20 +5,41 @@ const { jwtKeys } = require('../../config');
 
 const errorHandler = require('../utils/errorHandler');
 
+async function generateRefreshToken (){
+
+}
+
+async function generateAccessToken (){
+  const token = jwt.sign(
+    {
+      email: candidate.email,
+      // userID: candidate._id,
+    },
+    jwtKeys,
+    { expiresIn: 5 * 60 },
+  );
+
+}
+
+async function logOut(req,res){
+
+}
+
+
 async function login(req, res) {
   const candidate = await db.findOneUser({ username: req.body.username });
 
   if (candidate) {
     const passwordResult = bcrypt.compareSync(req.body.password, candidate.password);
     if (passwordResult) {
-      const token = jwt.sign(
-        {
-          email: candidate.email,
-          // userID: candidate._id,
-        },
-        jwtKeys,
-        { expiresIn: 5 * 60 },
-      );
+      // const token = jwt.sign(
+      //   {
+      //     email: candidate.email,
+      //     // userID: candidate._id,
+      //   },
+      //   jwtKeys,
+      //   { expiresIn: 5 * 60 },
+      // );
 
       res.status(200).json({ token: `Bearer ${token}` });
     } else {
@@ -34,7 +55,7 @@ async function register(req, res) {
     const { username } = req.body;
     const candidate = await db.findOneUser(username);
 
-    if (!candidate) {
+    if (candidate) {
       res.status(409).json({ message: 'such username already exists' });
     }
     console.log('register', req.body);
