@@ -9,13 +9,14 @@ const knex = new Knex(configKnex);
 const name = 'knex';
 
 const {
-  createProduct,
-  getProduct,
-  updateProduct,
-  deleteProduct,
-  getAllProducts,
-  getAllDeletedProducts,
-} = require('./products');
+  createTypeProduct,
+  getTypeProductId,
+  getTypeProductTypename,
+  updateTypeProduct,
+  deleteTypeProduct,
+  getAllTypesProducts,
+  getAllDeletedTypesProducts,
+} = require('./types');
 
 const {
   createColorProduct,
@@ -28,16 +29,13 @@ const {
 } = require('./colors');
 
 const {
-  getTypeProductId,
-  getTypeProductTypename,
-  createTypeProduct,
-  updateTypeProduct,
-  deleteTypeProduct,
-  getAllTypesProducts,
-  getAllDeletedTypesProducts,
-} = require('./types');
-
-const { createUser, updateUser, deleteUser, findOneUser } = require('./users');
+  createProduct,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+  getAllProducts,
+  getAllDeletedProducts,
+} = require('./prodcts')
 
 async function testConnection() {
   try {
@@ -54,17 +52,27 @@ async function close() {
   // no close for knex
 }
 
+
 module.exports = () => {
   return {
     testConnection,
     close,
+    //--
     createProduct,
     getProduct,
     updateProduct,
     deleteProduct,
     getAllProducts,
     getAllDeletedProducts,
-    // --- colors ---
+    //---
+    createTypeProduct,
+    getTypeProductId,
+    getTypeProductTypename,
+    updateTypeProduct,
+    deleteTypeProduct,
+    getAllTypesProducts,
+    getAllDeletedTypesProducts,
+    //---
     createColorProduct,
     getColorProductId,
     getColorProductColorname,
@@ -72,18 +80,5 @@ module.exports = () => {
     deleteColorProduct,
     getAllcolorsProducts,
     getAllDeletedColorsProducts,
-    // ---- types -----
-    getTypeProductId,
-    getTypeProductTypename,
-    createTypeProduct,
-    updateTypeProduct,
-    deleteTypeProduct,
-    getAllTypesProducts,
-    getAllDeletedTypesProducts,
-    // --- users ----
-    createUser,
-    updateUser,
-    deleteUser,
-    findOneUser,
   };
 };

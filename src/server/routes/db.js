@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../../db');
+const { createTables } = require('../../db/knex/CreateTables');
 const uploadToDb = require('../controllers/uploadtoDb');
 
 const dbRouter = express.Router();
