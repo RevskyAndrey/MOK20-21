@@ -8,11 +8,12 @@ const {
 const knex = new Knex(configKnex);
 const timestamp = new Date();
 
-async function createUser({ username, password }) {
+async function createUser({ username, password,refreshToken }) {
   try {
     const item = {};
     item.username = username;
     item.password = password;
+    item.refreshToken = refreshToken;
     item.created_at = timestamp;
     item.updated_at = timestamp;
     const res = await knex('users').insert(item).returning('*');

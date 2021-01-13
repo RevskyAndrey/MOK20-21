@@ -1,47 +1,23 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../../db');
-const { jwtKeys } = require('../../config');
+const { accessTokenSecret, refreshTokenSecret, jwtKeys } = require('../../config');
 
 const errorHandler = require('../utils/errorHandler');
 
-async function generateRefreshToken (){
-
-}
-
-async function generateAccessToken (){
-  const token = jwt.sign(
-    {
-      email: candidate.email,
-      // userID: candidate._id,
-    },
-    jwtKeys,
-    { expiresIn: 5 * 60 },
-  );
-
-}
-
-async function logOut(req,res){
-
-}
-
 
 async function login(req, res) {
-  const candidate = await db.findOneUser({ username: req.body.username });
-
+  const { username } = req.body;
+  const candidate = await db.findOneUser(username);
+  console.log(candidate);
   if (candidate) {
     const passwordResult = bcrypt.compareSync(req.body.password, candidate.password);
     if (passwordResult) {
-      // const token = jwt.sign(
-      //   {
-      //     email: candidate.email,
-      //     // userID: candidate._id,
-      //   },
-      //   jwtKeys,
-      //   { expiresIn: 5 * 60 },
-      // );
+      const user = { username: candidate.username, password: candidate.password };
+      const accessToken = jwt.sign(user, accessTokenSecret, { expiresIn: '15m' });
+      const refreshToken = jwt.sign(user, refreshTokenSecret, { expiresIn: '15d' });
 
-      res.status(200).json({ token: `Bearer ${token}` });
+      res.status(200).json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
     } else {
       res.status(401).json({ message: 'password incorrect' });
     }
@@ -58,19 +34,41 @@ async function register(req, res) {
     if (candidate) {
       res.status(409).json({ message: 'such username already exists' });
     }
-    console.log('register', req.body);
-    const salt = bcrypt.genSaltSync(5);
+    const password = bcrypt.hashSync(req.body.password, jwtKeys);
+    const user = { username: username, password: password };
+    const refreshToken = jwt.sign(user, refreshTokenSecret, { expiresIn: '15d' });
 
-    const password = bcrypt.hashSync(req.body.password, salt);
-    await db.createUser({ username, password });
+    await db.createUser({ username, password, refreshToken });
 
     res.status(201).json({ username, password });
-  } catch (e) {
-    errorHandler(res, e);
+  } catch (err) {
+    errorHandler(res, err);
+  }
+}
+
+async function refreshToken(req, res) {
+  try {
+    // как подписывать рефреш токен правильно?
+    const oldRefreshToken = req.headers.token.split(' ')[1];
+     jwt.verify(oldRefreshToken, refreshTokenSecret, async(err, username) => {
+      if (err) throw new Error('Token expired!');
+      const candidate = await db.findOneUser(username);
+       if (candidate && candidate.refreshToken === oldRefreshToken) {
+         const user = { username: candidate.username, password: candidate.password };
+         const accessToken = jwt.sign(user, accessTokenSecret, { expiresIn: '15m' });
+         const refreshToken = jwt.sign(user, refreshTokenSecret, { expiresIn: '15d' });
+
+         res.status(200).json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
+
+       }
+    })
+  } catch (err){
+    errorHandler(res, err);
   }
 }
 
 module.exports = {
   login,
   register,
+  refreshToken,
 };

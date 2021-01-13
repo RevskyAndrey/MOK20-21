@@ -1,9 +1,15 @@
-const { user } = require('../../config');
+const jwt = require('jsonwebtoken');
+const { accessTokenSecret } = require('../../config');
 
-module.exports = (req, res, next) => {
-  const basicAuth = `${user.name}:${user.password}`;
-  const token = Buffer.from(basicAuth).toString('base64');
-  const auth = `Basic ${token}`;
-  if (req.headers.authorization !== auth) res.send('not authorization').status(403);
-  next();
-};
+
+function authentificate(req, res, next) {
+  const token = req.headers.authorization.split(' ')[1];
+  if (!token) res.send('not authorization').status(403);
+  jwt.verify(token, accessTokenSecret, (err, user) => {
+    if (err) throw new Error('Token expired!');
+    req.user = user;
+    next();
+  });
+}
+
+module.exports = authentificate;

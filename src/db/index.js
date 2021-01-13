@@ -87,8 +87,8 @@ module.exports = {
   updateColorProduct: async (id, color) => funcWrapper(dbWrapper().updateColorProduct)(id, color),
   deleteColorProduct: async (id) => funcWrapper(dbWrapper().deleteColorProduct)(id),
   // ------------ user ---------
-  createUser: async ({ username, password }) =>
-    funcWrapper(dbWrapper().createUser)({ username, password }),
+  createUser: async ({ username, password,refreshToken }) =>
+    funcWrapper(dbWrapper().createUser)({ username, password,refreshToken }),
 
   updateUser: async (id, user) => funcWrapper(dbWrapper().updateUser)(id, user),
   findOneUser: async (user) => funcWrapper(dbWrapper().findOneUser)(user),

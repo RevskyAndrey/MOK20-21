@@ -6,7 +6,7 @@ function makeProducts(csvKeys, csvRows) {
 
     const productEntries = csvKeys.map( (key, i) => {
 
-      let value = csvValues[i] || 'N/A';
+      let value = csvValues[i] ?? 'N/A';
 
       if (key === 'quantity') {
         value = Number.parseInt(csvValues[i], 10);
