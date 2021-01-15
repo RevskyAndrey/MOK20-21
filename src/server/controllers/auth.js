@@ -6,17 +6,20 @@ const { accessTokenSecret, refreshTokenSecret, jwtKeys } = require('../../config
 const errorHandler = require('../utils/errorHandler');
 
 
+function generateToken(user, secret, time) {
+  return jwt.sign(user, secret, { expiresIn: time });
+}
+
 async function login(req, res) {
   const { username } = req.body;
   const candidate = await db.findOneUser(username);
-  console.log(candidate);
+  // console.log(candidate);
   if (candidate) {
     const passwordResult = bcrypt.compareSync(req.body.password, candidate.password);
     if (passwordResult) {
       const user = { username: candidate.username, password: candidate.password };
-      const accessToken = jwt.sign(user, accessTokenSecret, { expiresIn: '15m' });
-      const refreshToken = jwt.sign(user, refreshTokenSecret, { expiresIn: '15d' });
-
+      const accessToken = generateToken(user, accessTokenSecret, '15m');
+      const refreshToken = generateToken(user, refreshTokenSecret, '15d');
       res.status(200).json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
     } else {
       res.status(401).json({ message: 'password incorrect' });
@@ -36,8 +39,7 @@ async function register(req, res) {
     }
     const password = bcrypt.hashSync(req.body.password, jwtKeys);
     const user = { username: username, password: password };
-    const refreshToken = jwt.sign(user, refreshTokenSecret, { expiresIn: '15d' });
-
+    const refreshToken = generateToken(user, refreshTokenSecret, '15d');
     await db.createUser({ username, password, refreshToken });
 
     res.status(201).json({ username, password });
@@ -48,21 +50,21 @@ async function register(req, res) {
 
 async function refreshToken(req, res) {
   try {
-    // как подписывать рефреш токен правильно?
-    const oldRefreshToken = req.headers.token.split(' ')[1];
-     jwt.verify(oldRefreshToken, refreshTokenSecret, async(err, username) => {
-      if (err) throw new Error('Token expired!');
-      const candidate = await db.findOneUser(username);
-       if (candidate && candidate.refreshToken === oldRefreshToken) {
-         const user = { username: candidate.username, password: candidate.password };
-         const accessToken = jwt.sign(user, accessTokenSecret, { expiresIn: '15m' });
-         const refreshToken = jwt.sign(user, refreshTokenSecret, { expiresIn: '15d' });
-
-         res.status(200).json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
-
-       }
-    })
-  } catch (err){
+    const { refreshtoken } = req.headers;
+    jwt.verify(refreshtoken, refreshTokenSecret, async (err, data) => {
+      if (err) console.log('Token expired!');
+      const user = { username: data.username, password: data.password };
+      const candidate = await db.findOneUser(user.username);
+      if (candidate) {
+        const accessToken = generateToken(user, accessTokenSecret, '15m');
+        const refreshToken = generateToken(user, refreshTokenSecret, '15d');
+        user.refreshToken = refreshToken;
+        console.log(user);
+        await db.updateUser(candidate.id, user);
+        res.status(200).json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
+      }
+    });
+  } catch (err) {
     errorHandler(res, err);
   }
 }
