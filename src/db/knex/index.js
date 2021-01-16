@@ -42,7 +42,6 @@ const {
   updateUser,
   deleteUser,
   findOneUser,
-  findOneToken,
 } = require('./users');
 
 
