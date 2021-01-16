@@ -1,9 +1,7 @@
 const Knex = require('knex');
 const {
-  db: {
-    config: { knex: configKnex },
-  },
-} = require('../../config');
+  db: { knex: configKnex },
+} = require('../config');
 
 const knex = new Knex(configKnex);
 const timestamp = new Date();

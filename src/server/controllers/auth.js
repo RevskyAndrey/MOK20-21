@@ -5,7 +5,6 @@ const { accessTokenSecret, refreshTokenSecret, jwtKeys } = require('../../config
 
 const errorHandler = require('../utils/errorHandler');
 
-
 function generateToken(user, secret, time) {
   return jwt.sign(user, secret, { expiresIn: time });
 }

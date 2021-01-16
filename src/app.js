@@ -19,11 +19,10 @@ const boot = async () => {
     checkCatalogs(uploadDir);
     checkCatalogs(optimizedDir);
     autoOptimize();
+    await db.testConnection();
     app.listen(port, () => {
       console.log(`INFO: Express server started and listening at http://localhost:${port}`);
     });
-    await db.init();
-    console.log(`Now DB type is ${db.getType()}`);
   } catch (err) {
     console.error(err.message || err);
   }

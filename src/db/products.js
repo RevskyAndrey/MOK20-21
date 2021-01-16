@@ -1,16 +1,13 @@
 const Knex = require('knex');
 const {
-  db: {
-    config: { knex: configKnex },
-  },
-} = require('../../config');
+  db: { knex: configKnex },
+} = require('../config');
 
 const knex = new Knex(configKnex);
-const name = 'knex';
 const timestamp = new Date();
 
-const {getTypeProductTypename} =require('./types');
-const {getColorProductColorname} =require('./colors');
+const { createTypeProduct } = require('./types');
+const { createColorProduct } = require('./colors');
 
 async function createProduct(product) {
   try {
@@ -24,13 +21,8 @@ async function createProduct(product) {
     }
 
     const p = JSON.parse(JSON.stringify(product));
-    const type = await getTypeProductTypename(p.type);
-    const color = await getColorProductColorname(p.color);
-
-    if (!color || !type) {
-      console.log('Error: this color or type is not indicated in the tables');
-      return;
-    }
+    const type = await createTypeProduct(p.type);
+    const color = await createColorProduct(p.color);
     delete p.id;
     delete p.type;
     delete p.color;
@@ -38,11 +30,11 @@ async function createProduct(product) {
     p.quantity = p.quantity || 1;
     p.created_at = timestamp;
     p.updated_at = timestamp;
-    p.type_id = type.id;
-    p.color_id = color.id;
-
+    p.type_id = await type.id;
+    p.color_id = await color.id;
     const res = await knex('products').insert(p).returning('*');
-    console.log(`Debug :New product created ${JSON.stringify(res[0])}`);
+
+    // console.log(`Debug :New product created ${JSON.stringify(res[0])}`);
     return res[0];
   } catch (err) {
     console.error('create product failed', err.message || err);
@@ -71,18 +63,9 @@ async function updateProduct(id, product) {
     if (!Object.keys(product).length) {
       throw new Error('Error : Nothing to update');
     }
-
-    const p = JSON.parse(JSON.stringify(product));
-    const type = await getTypeProductTypename(p.type);
-    const color = await getColorProductColorname(p.color);
-
-    if (!color || !type) {
-      console.log('Error: this color or type is not indicated in the tables');
-      return;
-    }
-
-    const res = await knex('products').update(p).where('id', id).returning('*');
-    console.log(`Debug: product update ${JSON.stringify(res[0])}`);
+    product.updated_at = timestamp;
+    const res = await knex('products').update(product).where('id', id).returning('*');
+    // console.log(`Debug: product update ${JSON.stringify(res[0])}`);
     return res[0];
   } catch (err) {
     console.error('update product failed', err.message || err);
@@ -105,22 +88,22 @@ async function deleteProduct(id) {
   }
 }
 
-async function getAllDeletedProducts() {
-  try {
-    const res = await knex('products').whereNotNull('deleted_at');
-    return res;
-  } catch (err) {
-    console.error('get  all deletes product failed', err.message || err);
-    throw err;
-  }
-}
-
 async function getAllProducts() {
   try {
     const res = await knex('products').whereNull('deleted_at');
     return res;
   } catch (err) {
     console.error('get  all product failed', err.message || err);
+    throw err;
+  }
+}
+
+async function getAllDeletedProducts() {
+  try {
+    const res = await knex('products').whereNotNull('deleted_at');
+    return res;
+  } catch (err) {
+    console.error('get  all deletes product failed', err.message || err);
     throw err;
   }
 }
@@ -132,4 +115,4 @@ module.exports = {
   deleteProduct,
   getAllProducts,
   getAllDeletedProducts,
-}
+};

@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { task1, task2, task3, discount, uploads, db, dbType, dbColor, auth } = require('./routes');
+const { discount, uploads, db, dbType, dbColor, auth } = require('./routes');
 const authentificate = require('./middleware/auth');
 const errorHandler = require('./utils/errorHandler');
 

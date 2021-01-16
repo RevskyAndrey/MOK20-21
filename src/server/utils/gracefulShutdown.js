@@ -4,7 +4,7 @@ module.exports = () => {
   const exitHandler = (error) => {
     if (error) console.log(error);
     console.log('Gracefully shutdown...');
-    db.end();
+    db.close();
     process.exit();
   };
   process.on('SIGINT', exitHandler);
