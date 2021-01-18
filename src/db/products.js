@@ -6,8 +6,8 @@ const {
 const knex = new Knex(configKnex);
 const timestamp = new Date();
 
-const { createTypeProduct } = require('./types');
-const { createColorProduct } = require('./colors');
+const { getTypeProductTypename } = require('./types');
+const { getColorProductColorname } = require('./colors');
 
 async function createProduct(product) {
   try {
@@ -19,19 +19,30 @@ async function createProduct(product) {
       console.log('ERROR: No product color defined!');
       return { status: 'ERROR: No product color defined!' };
     }
-
+    if (!product.weight) {
+      console.log('ERROR: No product weight defined!');
+      return { status: 'ERROR: No product weight defined!' };
+    }
     const p = JSON.parse(JSON.stringify(product));
-    const type = await createTypeProduct(p.type);
-    const color = await createColorProduct(p.color);
+    const type = await getTypeProductTypename(p.type);
+    const color = await getColorProductColorname(p.color);
+
+    if (!color || !type) {
+      console.log('Error: this color or type is not indicated in the tables');
+      return;
+    }
+
     delete p.id;
     delete p.type;
     delete p.color;
     p.price = p.price || 0;
+    p.weight = p.weight || 0;
     p.quantity = p.quantity || 1;
     p.created_at = timestamp;
     p.updated_at = timestamp;
     p.type_id = await type.id;
     p.color_id = await color.id;
+
     const res = await knex('products').insert(p).returning('*');
 
     // console.log(`Debug :New product created ${JSON.stringify(res[0])}`);
@@ -47,7 +58,12 @@ async function getProduct(id) {
     if (!id) {
       throw new Error('ERROR: no product id defined');
     }
-    const res = await knex('products').where('id', id).whereNull('deleted_at');
+    const res = await knex
+      .innerJoin('types', 'products.type_id', '=', 'types.id')
+      .innerJoin('colors', 'products.color_id', '=', 'colors.id')
+      .select('*')
+      .from('products')
+      .where('products.id', id);
     return res[0];
   } catch (err) {
     console.error('get product failed', err.message || err);
@@ -90,7 +106,11 @@ async function deleteProduct(id) {
 
 async function getAllProducts() {
   try {
-    const res = await knex('products').whereNull('deleted_at');
+    const res = await knex
+      .innerJoin('types', 'products.type_id', '=', 'types.id')
+      .innerJoin('colors', 'products.color_id', '=', 'colors.id')
+      .select('*')
+      .from('products');
     return res;
   } catch (err) {
     console.error('get  all product failed', err.message || err);

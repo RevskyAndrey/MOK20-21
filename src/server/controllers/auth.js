@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../../db');
-const { accessTokenSecret, refreshTokenSecret, jwtKeys } = require('../../config');
+const { accessTokenSecret, refreshTokenSecret, jwtKey } = require('../../config');
 
 const errorHandler = require('../utils/errorHandler');
 
@@ -36,7 +36,7 @@ async function register(req, res) {
     if (candidate) {
       res.status(409).json({ message: 'such username already exists' });
     }
-    const password = bcrypt.hashSync(req.body.password, jwtKeys);
+    const password = bcrypt.hashSync(req.body.password, jwtKey);
     const user = { username: username, password: password };
     const refreshToken = generateToken(user, refreshTokenSecret, '15d');
     await db.createUser({ username, password, refreshToken });

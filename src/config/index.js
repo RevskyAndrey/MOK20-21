@@ -27,5 +27,6 @@ module.exports = {
   },
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET || fatal('FATAL : ACCESS_TOKEN_SECRET is not defined'),
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET || fatal('FATAL : REFRESH_TOKEN_SECRET is not defined'),
-  jwtKeys: process.env.JWT_KEY || fatal('FATAL : JWT_KEY is not defined'),
+  jwtKey: process.env.JWT_KEY || fatal('FATAL : JWT_KEY is not defined'),
+  keyAPInovaPoshta: process.env.NOVAPOSHTAAPIKEY || fatal('FATAL : JWT_KEY is not defined'),
 };

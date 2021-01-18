@@ -33,7 +33,7 @@ const {
   deleteProduct,
   getAllProducts,
   getAllDeletedProducts,
-} = require('./prodcts');
+} = require('./products');
 
 const { createUser, updateUser, deleteUser, findOneUser } = require('./users');
 

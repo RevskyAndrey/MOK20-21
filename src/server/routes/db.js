@@ -31,8 +31,8 @@ dbRouter.get('/', (req, res) => {
 });
 
 dbRouter.post('/create', (req, res) => {
-  const { type, color, price, quantity } = req.query;
-  db.createProduct({ type, color, price, quantity }).then((result) => res.status(200).json(result));
+  const { type, color, price, quantity, weight } = req.query;
+  db.createProduct({ type, color, price, quantity, weight }).then((result) => res.status(200).json(result));
 });
 
 // localhost:3000/db/update/10?type=socks&color=red&price=55&quantity=5
