@@ -17,7 +17,7 @@ async function login(req, res) {
     const passwordResult = bcrypt.compareSync(req.body.password, candidate.password);
     if (passwordResult) {
       const user = { username: candidate.username, password: candidate.password };
-      const accessToken = generateToken(user, accessTokenSecret, '15m');
+      const accessToken = generateToken(user, accessTokenSecret, '35m');
       const refreshToken = generateToken(user, refreshTokenSecret, '15d');
       res.status(200).json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
     } else {

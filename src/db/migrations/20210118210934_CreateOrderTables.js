@@ -1,0 +1,23 @@
+exports.up = async (knex) => {
+  await knex.raw('create extension if not exists "uuid-ossp"');
+  await knex.schema.createTable('orders', (table) => {
+    table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')).primary();
+    table.integer('username').references('username').inTable('users').notNullable();
+    table.string('from').nullable();
+    table.string('to').nullable();
+    table.string('status').defaultTo('Opened');
+    table.timestamps(true, true);
+  });
+  await knex.schema.createTable('order_info', (table) => {
+    table.uuid('order_id').references('orders.id').onDelete('CASCADE');
+    table.uuid('product_id').references('products.id').onDelete('CASCADE');
+    table.integer('quantity').notNullable();
+    table.decimal('price').notNullable().defaultTo(0.0);
+  });
+};
+
+exports.down = async (knex) => {
+  await knex.schema.dropTable('order_items');
+  await knex.schema.dropTable('orders');
+  await knex.raw('drop extension if exists "uuid-ossp" cascade');
+};

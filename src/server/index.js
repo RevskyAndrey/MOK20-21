@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const {  uploads, db, dbType, dbColor, auth } = require('./routes');
+const {  uploads, db, dbType, dbColor, auth , orders} = require('./routes');
 const authentificate = require('./middleware/auth');
 const errorHandler = require('./utils/errorHandler');
 
@@ -17,11 +17,12 @@ app.get('/ping', (req, res) => {
 });
 
 app.use('/auth', auth);
-// app.use(authentificate);
+app.use(authentificate);
 app.use('/uploads', uploads);
 app.use('/db/products/type', dbType);
 app.use('/db/products/color', dbColor);
 app.use('/db/products', db);
+app.use('/api/orders', orders);
 
 
 app.use((req, res, next) => {

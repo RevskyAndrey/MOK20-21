@@ -35,6 +35,10 @@ const {
   getAllDeletedProducts,
 } = require('./products');
 
+const {
+  createOrder
+} =require ('./orders')
+
 const { createUser, updateUser, deleteUser, findOneUser } = require('./users');
 
 async function testConnection() {
@@ -83,4 +87,6 @@ module.exports = {
   updateUser,
   deleteUser,
   findOneUser,
+  //---
+  createOrder
 };
