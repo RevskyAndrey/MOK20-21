@@ -6,7 +6,6 @@ const {
 } = require('../../config');
 
 const knex = new Knex(configKnex);
-const name = 'knex';
 const timestamp = new Date();
 
 async function createTypeProduct(type) {
@@ -59,7 +58,7 @@ async function updateTypeProduct(id, type) {
     if (!type) {
       throw new Error('Error : Nothing to update');
     }
-
+    type.updated_at = timestamp;
     const res = await knex('types').update(type).where('id', id).returning('*');
     console.log(`Debug: product update ${JSON.stringify(res[0])}`);
     return res[0];
@@ -105,11 +104,11 @@ async function getAllDeletedTypesProducts() {
 }
 
 module.exports = {
-    createTypeProduct,
-    getTypeProductId,
-    getTypeProductTypename,
-    updateTypeProduct,
-    deleteTypeProduct,
-    getAllTypesProducts,
-    getAllDeletedTypesProducts
-}
+  getTypeProductId,
+  getTypeProductTypename,
+  createTypeProduct,
+  updateTypeProduct,
+  deleteTypeProduct,
+  getAllTypesProducts,
+  getAllDeletedTypesProducts,
+};

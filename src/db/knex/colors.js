@@ -6,7 +6,6 @@ const {
 } = require('../../config');
 
 const knex = new Knex(configKnex);
-const name = 'knex';
 const timestamp = new Date();
 
 async function createColorProduct(color) {
@@ -59,7 +58,7 @@ async function updateColorProduct(id, color) {
     if (!color) {
       throw new Error('Error : Nothing to update');
     }
-
+    color.updated_at = timestamp;
     const res = await knex('colors').update(color).where('id', id).returning('*');
     console.log(`Debug: product update ${JSON.stringify(res[0])}`);
     return res[0];

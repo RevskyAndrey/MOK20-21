@@ -1,17 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const { task1, task2, task3, discount, uploads, db, dbType, dbColor } = require('./routes');
-const auth = require('./middleware/auth');
+const { task1, task2, task3, discount, uploads, db, dbType, dbColor, auth } = require('./routes');
+const authentificate = require('./middleware/auth');
 const errorHandler = require('./utils/errorHandler');
 
 const app = express();
-app.use(auth);
-app.use('/uploads', uploads);
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use('/auth', auth);
+app.use(authentificate);
+app.use('/uploads', uploads);
 app.use('/task1', task1);
 app.use('/task2', task2);
 app.use('/task3', task3);

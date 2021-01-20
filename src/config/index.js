@@ -8,10 +8,6 @@ module.exports = {
   uploadDir: process.env.UPLOAD_DIR || './uploads/',
   optimizedDir: process.env.OPTIMIZED_DIR || './uploads/optimized/',
   autoOptimizeTime: process.env.AUTO_OPTIMIZE_TIME || 1800000,
-  user: {
-    name: 'Masters',
-    password: 'Academy',
-  },
   db: {
     defaultType: process.env.DB_WRAPPER || 'knex',
     config: {
@@ -57,4 +53,7 @@ module.exports = {
       },
     },
   },
+  accessTokenSecret: process.env.ACCESS_TOKEN_SECRET || fatal('FATAL : ACCESS_TOKEN_SECRET is not defined'),
+  refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET || fatal('FATAL : REFRESH_TOKEN_SECRET is not defined'),
+  jwtKeys: process.env.JWT_KEY || fatal('FATAL : JWT_KEY is not defined'),
 };

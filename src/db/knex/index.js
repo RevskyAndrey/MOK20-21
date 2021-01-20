@@ -35,7 +35,16 @@ const {
   deleteProduct,
   getAllProducts,
   getAllDeletedProducts,
-} = require('./prodcts')
+} = require('./prodcts');
+
+const {
+  createUser,
+  updateUser,
+  deleteUser,
+  findOneUser,
+  findOneToken,
+} = require('./users');
+
 
 async function testConnection() {
   try {
@@ -80,5 +89,10 @@ module.exports = () => {
     deleteColorProduct,
     getAllcolorsProducts,
     getAllDeletedColorsProducts,
-  };
+    //---
+    createUser,
+    updateUser,
+    deleteUser,
+    findOneUser,
+  }
 };
