@@ -26,6 +26,9 @@ dbRouter.get('/:id', (req, res) => {
 
 dbRouter.get('/', (req, res) => {
   db.getAllProducts().then((result) => {
+    if (result.length === 0){
+      res.status(200).json({ sratus: "no products" });
+    }
     res.status(200).json(result);
   });
 });

@@ -36,8 +36,8 @@ const {
 } = require('./products');
 
 const {
-  createOrder
-} =require ('./orders')
+  createOrder, cancelOrder,getOrderbyID
+} = require('./orders');
 
 const { createUser, updateUser, deleteUser, findOneUser } = require('./users');
 
@@ -88,5 +88,7 @@ module.exports = {
   deleteUser,
   findOneUser,
   //---
-  createOrder
+  createOrder,
+  cancelOrder,
+  getOrderbyID
 };

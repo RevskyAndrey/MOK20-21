@@ -35,6 +35,8 @@ async function findOneUser(username) {
   }
 }
 
+
+
 async function updateUser(id, user) {
   try {
     if (!id) {

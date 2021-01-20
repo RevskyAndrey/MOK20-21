@@ -17,8 +17,16 @@ async function getUsernameFromToken(req) {
 
 
 async function createOrders(req, res) {
-  const user = await getUsernameFromToken(req);
+  const username = await getUsernameFromToken(req);
+  const user = await findOneUser(username)
   res.status(201).json({ status: user });
+}
+
+
+
+async function getOrderbyID(req,res){
+  getOrderbyID(id);
+  res.status(200).json({status: " all orders"})
 }
 
 async function getAllOrders(req,res){
