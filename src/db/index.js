@@ -1,140 +1,89 @@
-const { Pool } = require('pg');
-const { db: config } = require('../config');
+/* eslint-disable import/no-dynamic-require */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable global-require */
+/* eslint-disable no-shadow */
+const {
+  db: { config, defaultType },
+} = require('../config');
 
-const client = new Pool(config);
-const name = `postgres`;
+const db = {};
+let type = defaultType;
 
-async function testConnection() {
+const funcWrapper = (func) =>
+  typeof func === 'function'
+    ? func
+    : console.log(`FATAL: Cannot find ${func.name} function for current DB wrapper`);
+
+const init = async () => {
   try {
-    console.log(`INFO: DB ${name} test connection OK`);
-    await client.query('SELECT NOW()');
-  } catch (err) {
-    console.error('ERROR: test connection failed', err.message || err);
-    throw err;
-  }
-}
-
-async function close() {
-  console.log(` INFO: Closing ${name} DB wraper`);
-  // eslint-disable-next-line no-unused-expressions
-  client.end;
-}
-
-async function createProduct({ type, color, price = 0, quantity = 1 }) {
-  try {
-    if (!type) {
-      throw new Error('ERROR: no product type defined');
+    for (const [k, v] of Object.entries(config)) {
+      const wrapper = require(`./${k}`)(v);
+      await wrapper.testConnection();
+      console.log(`INFO: DB wrapper for ${k} initialized.`);
+      db[k] = wrapper;
     }
-    if (!color) {
-      throw new Error('ERROR: no product color defined');
-    }
-    const timestamp = new Date();
-
-    let res = await client.query(
-      'UPDATE products SET quantity = quantity + $1, updated_at = $2 WHERE type = $3 AND color = $4 AND price = $5 RETURNING *',
-      [quantity, timestamp, type, color, price],
-    );
-
-    if (!res.rows[0])
-      res = await client.query(
-        'INSERT INTO products(type, color, price, quantity, created_at, updated_at, deleted_at) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-        [type, color, price, quantity, timestamp, timestamp, null],
-      );
-    // console.log(`Debug : product uploaded or created ${JSON.stringify(res.rows[0])}`);
-    return res.rows[0];
   } catch (err) {
-    console.error('create product failed', err.message || err);
-    throw err;
+    console.log('FATAL init: ', err.message || err);
   }
-}
+};
 
-async function getProduct(id) {
-  try {
-    if (!id) {
-      throw new Error('ERROR: no product id defined');
-    }
-    const res = await client.query('SELECT * FROM products WHERE id = $1 AND deleted_at IS NULL', [
-      id,
-    ]);
-    return res.rows[0];
-  } catch (err) {
-    console.error('get product failed', err.message || err);
-    throw err;
+const end = async () => {
+  for (const [k, v] of Object.entries(db)) {
+    await v.close();
+    console.log(`INFO: DB wrapper for ${k} was closed.`);
   }
-}
+};
 
-async function updateProduct(id, product) {
-  try {
-    if (!id) {
-      throw new Error('ERROR: no product id defined');
-    }
-    const query = [];
-    const values = [];
-    // eslint-disable-next-line no-restricted-syntax
-    for (const [i, [k, v]] of Object.entries(product).entries()) {
-      query.push(`${k} = $${i + 1}`);
-      values.push(v);
-    }
-    if (!values.length) {
-      throw new Error('Error : Nothing to update');
-    }
-    values.push(id);
-    const objectSet = `${query.join(',')}`;
-    const res = await client.query(
-      `UPDATE products SET ${objectSet} WHERE id = $${values.length} RETURNING *`,
-      values,
-    );
-    // console.log(`DEBUG: product updated  ${JSON.stringify(res.rows[0])}`);
-    return res.rows[0];
-  } catch (err) {
-    console.error('update product failed', err.message || err);
-    throw err;
+const setType = (t) => {
+  if (!t || !db[t]) {
+    console.log('WARNING: Cannot find provided DB type.');
+    return false;
   }
-}
+  type = t;
+  console.log(`INFO: The DB type has been changed to ${t}`);
+  return true;
+};
 
-async function deleteProduct(id) {
-  try {
-    if (!id) {
-      throw new Error('ERROR: no product id defined');
-    }
-    // working
-    // await client.query('DELETE FROM products WHERE id=$1', [id]);
-    await client.query(`UPDATE products SET deleted_at = $1 WHERE id = $2`, [new Date(), id]);
-    return true;
-  } catch (err) {
-    console.error('delete product failed', err.message || err);
-    throw err;
-  }
-}
+const getType = () => type;
 
-async function getAllProduct() {
-  try {
-    const res = await client.query(`SELECT * FROM products WHERE deleted_at IS NULL`);
-    return res.rows;
-  } catch (err) {
-    console.error('get  all product failed', err.message || err);
-    throw err;
-  }
-}
-
-async function getAllDeletedProduct() {
-  console.log('getAllDeletedProduct');
-  try {
-    const res = await client.query(`SELECT * FROM products WHERE "deleted_at" IS NOT NULL`);
-    return res.rows;
-  } catch (err) {
-    console.error('get  all product failed', err.message || err);
-    throw err;
-  }
-}
+const dbWrapper = (t) => db[t] || db[type];
 
 module.exports = {
-  testConnection,
-  close,
-  createProduct,
-  getProduct,
-  updateProduct,
-  deleteProduct,
-  getAllProduct,
-  getAllDeletedProduct,
+  init,
+  end,
+  setType,
+  getType,
+  dbWrapper,
+  //---------------------------
+  testConnection: async () => funcWrapper(dbWrapper().testConnection)(),
+  close: async () => funcWrapper(dbWrapper().close)(),
+  createProduct: async (product) => funcWrapper(dbWrapper().createProduct)(product),
+  getProduct: async (id) => funcWrapper(dbWrapper().getProduct)(id),
+  getAllProducts: async () => funcWrapper(dbWrapper().getAllProducts)(),
+  updateProduct: async (id, product) => funcWrapper(dbWrapper().updateProduct)(id, product),
+  getAllDeletedProducts: async () => funcWrapper(dbWrapper().getAllDeletedProducts)(),
+  deleteProduct: async (id) => funcWrapper(dbWrapper().deleteProduct)(id),
+  // ------------ type ---------------
+  createTypeProduct: async (type) => funcWrapper(dbWrapper().createTypeProduct)(type),
+  getTypeProductId: async (id) => funcWrapper(dbWrapper().getTypeProductId)(id),
+
+  getTypeProductTypename: async (typename) =>
+    funcWrapper(dbWrapper().getTypeProductTypename)(typename),
+
+  getAllDeletedTypesProducts: async () => funcWrapper(dbWrapper().getAllDeletedTypesProducts)(),
+  getAllTypesProducts: async () => funcWrapper(dbWrapper().getAllTypesProducts)(),
+  updateTypeProduct: async (id, type) => funcWrapper(dbWrapper().updateTypeProduct)(id, type),
+  deleteTypeProduct: async (id) => funcWrapper(dbWrapper().deleteTypeProduct)(id),
+  // ---------- color ----------
+  createColorProduct: async (color) => funcWrapper(dbWrapper().createColorProduct)(color),
+  getColorProductId: async (id) => funcWrapper(dbWrapper().getColorProductId)(id),
+
+  getColorProductColorname: async (colorname) =>
+    funcWrapper(dbWrapper().getColorProductColorname)(colorname),
+
+  getAllDeletedColorsProducts: async () => funcWrapper(dbWrapper().getAllDeletedColorsProducts)(),
+  getAllcolorsProducts: async () => funcWrapper(dbWrapper().getAllcolorsProducts)(),
+  updateColorProduct: async (id, color) => funcWrapper(dbWrapper().updateColorProduct)(id, color),
+  deleteColorProduct: async (id) => funcWrapper(dbWrapper().deleteColorProduct)(id),
 };
