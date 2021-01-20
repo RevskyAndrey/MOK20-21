@@ -4,14 +4,6 @@ const { createTables } = require('../../db/knex/CreateTables');
 const uploadToDb = require('../controllers/uploadtoDb');
 
 const dbRouter = express.Router();
-// localhost:3000/db/products/createTable
-dbRouter.get('/createTable', (req, res) => {
-  createTables().then(resolve => {
-    console.log('dbCreateTable', resolve);
-    res.status(200).json(resolve);
-  });
-});
-
 
 dbRouter.get('/deleted', (req, res) => {
   db.getAllDeletedProducts().then((resolve) => {
