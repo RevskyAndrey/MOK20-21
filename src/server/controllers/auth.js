@@ -10,37 +10,46 @@ function generateToken(user, secret, time) {
 }
 
 async function login(req, res) {
-  const { username } = req.body;
-  const candidate = await db.findOneUser(username);
-  // console.log(candidate);
-  if (candidate) {
-    const passwordResult = bcrypt.compareSync(req.body.password, candidate.password);
-    if (passwordResult) {
-      const user = { username: candidate.username, password: candidate.password };
-      const accessToken = generateToken(user, accessTokenSecret, '35m');
-      const refreshToken = generateToken(user, refreshTokenSecret, '15d');
-      res.status(200).json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
-    } else {
-      res.status(401).json({ message: 'password incorrect' });
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      res.status(400).json({ status: 'Bad Request  enter login and password' });
     }
-  } else {
-    res.status(404).json({ message: 'user does not exist' });
+    const candidate = await db.findOneUser(username);
+    // console.log(candidate);
+    if (candidate) {
+      const passwordResult = bcrypt.compareSync(password, candidate.password);
+      if (passwordResult) {
+        const user = { username: candidate.username, password: candidate.password };
+        const accessToken = generateToken(user, accessTokenSecret, '35m');
+        const refreshToken = generateToken(user, refreshTokenSecret, '15d');
+        res.status(200).json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
+      } else {
+        res.status(401).json({ message: 'password incorrect' });
+      }
+    } else {
+      res.status(404).json({ message: 'user does not exist' });
+    }
+  } catch (err) {
+    errorHandler(res, err);
   }
+
 }
 
 async function register(req, res) {
   try {
-    const { username } = req.body;
+    const { username, password } = req.body;
+    if (!username || !password) {
+      res.status(400).json({ status: 'Bad Request  enter login and password' });
+    }
     const candidate = await db.findOneUser(username);
-
     if (candidate) {
       res.status(409).json({ message: 'such username already exists' });
     }
-    const password = bcrypt.hashSync(req.body.password, jwtKey);
+    const encryptedPassword = bcrypt.hashSync(req.body.password, jwtKey);
     const user = { username: username, password: password };
     const refreshToken = generateToken(user, refreshTokenSecret, '15d');
-    await db.createUser({ username, password, refreshToken });
-
+    await db.createUser({ username, encryptedPassword, refreshToken });
     res.status(201).json({ username, password });
   } catch (err) {
     errorHandler(res, err);
@@ -49,6 +58,9 @@ async function register(req, res) {
 
 async function refreshToken(req, res) {
   try {
+    if (!req.headers.refreshtoken) {
+      res.status(400).json({ status: 'Sorry, but you need to login' });
+    }
     const { refreshtoken } = req.headers;
     jwt.verify(refreshtoken, refreshTokenSecret, async (err, data) => {
       if (err) console.log('Token expired!');
