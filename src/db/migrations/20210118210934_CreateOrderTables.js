@@ -17,7 +17,6 @@
     table.string('from').nullable();
     table.string('to').nullable();
     table.string('status').defaultTo('Opened');
-    table.timestamps(true, true);
   });
 
   await knex.schema.createTable('order_info', (table) => {

@@ -10,8 +10,8 @@ async function createTypeProduct(type) {
     try {
         const item = {};
         item.type = type;
-        item.created_at = timestamp;
-        item.updated_at = timestamp;
+        // item.created_at = timestamp;
+        // item.updated_at = timestamp;
         const res = await knex('types').insert(item).returning('*');
         return res[0];
     } catch (err) {

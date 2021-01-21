@@ -12,8 +12,8 @@ async function createUser({ username, password,refreshToken }) {
     item.username = username;
     item.password = password;
     item.refreshToken = refreshToken;
-    item.created_at = timestamp;
-    item.updated_at = timestamp;
+    // item.created_at = timestamp;
+    // item.updated_at = timestamp;
     const res = await knex('users').insert(item).returning('*');
     return res[0];
   } catch (err) {

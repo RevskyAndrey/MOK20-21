@@ -17,7 +17,7 @@ app.get('/ping', (req, res) => {
 });
 
 app.use('/auth', auth);
-app.use(authentificate);
+// app.use(authentificate);
 app.use('/uploads', uploads);
 app.use('/db/products/type', dbType);
 app.use('/db/products/color', dbColor);
