@@ -49,8 +49,8 @@ async function register(req, res) {
     const encryptedPassword = bcrypt.hashSync(req.body.password, jwtKey);
     const user = { username: username, password: password };
     const refreshToken = generateToken(user, refreshTokenSecret, '15d');
-    await db.createUser({ username, encryptedPassword, refreshToken });
-    res.status(201).json({ username, password });
+    await db.createUser({ username, password:encryptedPassword, refreshToken });
+    res.status(201).json({ username, encryptedPassword });
   } catch (err) {
     errorHandler(res, err);
   }

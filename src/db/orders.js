@@ -12,17 +12,17 @@ async function createOrder(order) {
   const { username, from, to, status } = order;
 }
 
-async function getOrderbyID(id){
+async function getOrderByID(id){
   if (!id) {
     throw new Error('ERROR: no order id defined');
   }
 
-  const res = await knex
-    .innerJoin('order_info', 'products.type_id', '=', 'types.id')
-    .innerJoin('colors', 'products.color_id', '=', 'colors.id')
-    .select('*')
-    .from('products');
-  return res;
+  // const res = await knex
+  //   .innerJoin('order_info', 'products.type_id', '=', 'types.id')
+  //   .innerJoin('colors', 'products.color_id', '=', 'colors.id')
+  //   .select('*')
+  //   .from('products');
+  // return res;
 }
 
 
@@ -36,5 +36,5 @@ async function cancelOrder(id) {
 
 
 module.exports = {
-  createOrder, cancelOrder,getOrderbyID
+  createOrder, cancelOrder,getOrderByID
 };

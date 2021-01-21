@@ -1,5 +1,5 @@
 const express = require('express');
-const { createOrders, getAllOrders, cancelingOrder } = require('../controllers/orders');
+const { createOrders, getAllOrders, cancelingOrder,findCity } = require('../controllers/orders');
 
 
 const orders = express.Router();
@@ -15,6 +15,12 @@ orders.get('/', (req, res) => {
   getAllOrders();
   res.status(201).json({ status: 'get all' });
 });
+
+orders.post('/find-city/', (req, res) => {
+  findCity(req,res)
+});
+
+
 orders.post('/cansel/:id', (req, res) => {
   const { id } = req.params;
   cancelingOrder(id)

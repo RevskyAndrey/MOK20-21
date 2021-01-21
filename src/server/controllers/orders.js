@@ -6,6 +6,8 @@ const {
 
 const db = require('../../db');
 
+const api = require('./../../lib/api/')
+
 async function getUsernameFromToken(req) {
   const token = req.headers.authorization.split(' ')[1];
   return jwt.verify(token, accessTokenSecret, (err, user) => {
@@ -18,20 +20,26 @@ async function getUsernameFromToken(req) {
 
 async function createOrders(req, res) {
   const username = await getUsernameFromToken(req);
-  const user = await findOneUser(username)
+  const user = await db.findOneUser(username)
   res.status(201).json({ status: user });
 }
 
 
 
-async function getOrderbyID(req,res){
-  getOrderbyID(id);
+async function getOrderById(req,res){
+  getOrderByID(id);
   res.status(200).json({status: " all orders"})
 }
 
 async function getAllOrders(req,res){
   res.status(200).json({status: " all orders"})
 }
+
+async function findCity(req,res){
+   const {from , to} = req.body;
+
+}
+
 
 
 async function cancelingOrder(id, query) {
@@ -41,4 +49,4 @@ async function cancelingOrder(id, query) {
 }
 
 
-module.exports = { createOrders, getAllOrders,cancelingOrder };
+module.exports = { createOrders,getOrderById, getAllOrders,cancelingOrder,findCity };

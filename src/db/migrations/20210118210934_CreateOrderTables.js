@@ -13,7 +13,7 @@
 
   await knex.schema.createTable('orders', (table) => {
     table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')).primary();
-    table.uuid('user').references('id').inTable('users').notNullable();
+    table.uuid('user_id').references('id').inTable('users').notNullable();
     table.string('from').nullable();
     table.string('to').nullable();
     table.string('status').defaultTo('Opened');
