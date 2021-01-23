@@ -1,13 +1,42 @@
+const axios = require('axios');
+const { keyApiNova: apiKey } = require('../../config');
 
+const urlSearchSettlements = 'http://testapi.novaposhta.ua/v2.0/json/Address/searchSettlements/';
+const urlGetPriceDelivery = 'http://testapi.novaposhta.ua/v2.0/en/getDocumentPrice/json/';
 
+async function searchSettlements(addresses) {
+  const result = await axios.post(urlSearchSettlements, {
+    apiKey,
+    modelName: 'Address',
+    calledMethod: 'searchSettlements',
+    methodProperties: {
+      CityName: addresses,
+      Limit: 1,
+    },
+  });
+  return result.data.data[0].Addresses[0].Ref;
+}
 
-//
-// {
-//   "apiKey":"51ea8738cfb95ee12cdf613713ea5a6e",
-//   "modelName": "Address",
-//   "calledMethod": "searchSettlements",
-//   "methodProperties": {
-//   "CityName": "київ",
-//     "Limit": 5
-// }
-// }
+async function getPriceDelivery(params) {
+  const result = await axios.post(urlGetPriceDelivery, {
+    apiKey,
+    modelName: 'InternetDocument',
+    calledMethod: 'getDocumentPrice',
+    methodProperties: {
+      CitySender: `${params.from}`,
+      CityRecipient: `${params.to}`,
+      Weight: `${params.weight}`,
+      ServiceType: 'DoorsDoors',
+      Cost: `${params.totalPrice}`,
+      CargoType: 'Cargo',
+      SeatsAmount: '10',
+    },
+  });
+
+  console.log(result);
+}
+
+module.exports = {
+  searchSettlements,
+  getPriceDelivery,
+};

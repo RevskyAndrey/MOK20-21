@@ -1,30 +1,44 @@
 const express = require('express');
-const { createOrders, getAllOrders, cancelingOrder,findCity } = require('../controllers/orders');
-
+const {
+  createOrders,
+  getOrderById,
+  getAllOrders,
+  cancelingOrder,
+  findCity,
+  delivery,
+} = require('../controllers/orders');
 
 const orders = express.Router();
 
 orders.post('/', (req, res) => {
-  createOrders(req, res).then();
+  createOrders(req, res).then((resolve) => {
+    res.status(201).json(resolve);
+  });
 });
 
 orders.get('/:id', (req, res) => {
-  res.status(201).json({ status: 'get id' });
+  const { id } = req.params;
+  getOrderById(id).then((resolve) => {
+    res.status(201).json(resolve);
+  });
 });
+
 orders.get('/', (req, res) => {
   getAllOrders();
   res.status(201).json({ status: 'get all' });
 });
 
 orders.post('/find-city/', (req, res) => {
-  findCity(req,res)
+  findCity(req, res);
 });
 
+orders.post('/delivery/:id', (req, res) => {
+  delivery(req, res);
+});
 
 orders.post('/cansel/:id', (req, res) => {
   const { id } = req.params;
-  cancelingOrder(id)
+  cancelingOrder(id, res);
 });
-
 
 module.exports = orders;

@@ -1,6 +1,3 @@
-const {
+const { getPriceDelivery, searchSettlements } = require('./novaPoshta');
 
-} = require('./novaPoshta');
-
-
-module.exports ={};
+module.exports = { getPriceDelivery, searchSettlements };
