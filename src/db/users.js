@@ -6,7 +6,7 @@ const {
 const knex = new Knex(configKnex);
 const timestamp = new Date();
 
-async function createUser({ username, password,refreshToken }) {
+async function createUser({ username, password, refreshToken }) {
   try {
     const item = {};
     item.username = username;
@@ -35,8 +35,6 @@ async function findOneUser(username) {
   }
 }
 
-
-
 async function updateUser(id, user) {
   try {
     if (!id) {
@@ -46,7 +44,7 @@ async function updateUser(id, user) {
       throw new Error('Error : Nothing to update');
     }
     user.updated_at = timestamp;
-    const res = await knex('users').update(user).where({  id }).returning('*');
+    const res = await knex('users').update(user).where({ id }).returning('*');
     console.log(`Debug: product update ${JSON.stringify(res[0])}`);
     return res[0];
   } catch (err) {
@@ -60,7 +58,7 @@ async function deleteUser(id) {
     if (!id) {
       throw new Error('ERROR: no product id defined');
     }
-    await knex('users').where({  id }).update('deleted_at', new Date());
+    await knex('users').where({ id }).update('deleted_at', new Date());
     return true;
   } catch (err) {
     console.error('delete user failed', err.message || err);

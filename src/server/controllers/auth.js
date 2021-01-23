@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../../db');
@@ -22,8 +23,12 @@ async function login(req, res) {
       if (passwordResult) {
         const user = { username: candidate.username, password: candidate.password };
         const accessToken = generateToken(user, accessTokenSecret, '35m');
+
         const refreshToken = generateToken(user, refreshTokenSecret, '15d');
-        res.status(200).json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
+
+        res
+          .status(200)
+          .json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
       } else {
         res.status(401).json({ message: 'password incorrect' });
       }
@@ -33,7 +38,6 @@ async function login(req, res) {
   } catch (err) {
     errorHandler(res, err);
   }
-
 }
 
 async function register(req, res) {
@@ -47,9 +51,9 @@ async function register(req, res) {
       res.status(409).json({ message: 'such username already exists' });
     }
     const encryptedPassword = bcrypt.hashSync(req.body.password, jwtKey);
-    const user = { username: username, password: password };
+    const user = { username, password };
     const refreshToken = generateToken(user, refreshTokenSecret, '15d');
-    await db.createUser({ username, password:encryptedPassword, refreshToken });
+    await db.createUser({ username, password: encryptedPassword, refreshToken });
     res.status(201).json({ username, encryptedPassword });
   } catch (err) {
     errorHandler(res, err);
@@ -72,7 +76,9 @@ async function refreshToken(req, res) {
         user.refreshToken = refreshToken;
         console.log(user);
         await db.updateUser(candidate.id, user);
-        res.status(200).json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
+        res
+          .status(200)
+          .json({ accessToken: `Bearer ${accessToken}`, RefreshToken: `${refreshToken}` });
       }
     });
   } catch (err) {

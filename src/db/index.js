@@ -29,15 +29,15 @@ const {
 const {
   createProduct,
   getProduct,
+  findProduct,
   updateProduct,
   deleteProduct,
   getAllProducts,
   getAllDeletedProducts,
+  updateProductQuantity,
 } = require('./products');
 
-const {
-  createOrder, cancelOrder, getOrderByID
-} = require('./orders');
+const { createOrderInfo, createOrder, cancelOrder, getOrderByID } = require('./orders');
 
 const { createUser, updateUser, deleteUser, findOneUser } = require('./users');
 
@@ -62,10 +62,12 @@ module.exports = {
   //--
   createProduct,
   getProduct,
+  findProduct,
   updateProduct,
   deleteProduct,
   getAllProducts,
   getAllDeletedProducts,
+  updateProductQuantity,
   //---
   createTypeProduct,
   getTypeProductId,
@@ -89,6 +91,7 @@ module.exports = {
   findOneUser,
   //---
   createOrder,
+  createOrderInfo,
   cancelOrder,
   getOrderByID,
 };

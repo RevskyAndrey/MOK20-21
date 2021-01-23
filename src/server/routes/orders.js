@@ -11,9 +11,7 @@ const {
 const orders = express.Router();
 
 orders.post('/', (req, res) => {
-  createOrders(req, res).then((resolve) => {
-    res.status(201).json(resolve);
-  });
+  createOrders(req, res);
 });
 
 orders.get('/:id', (req, res) => {

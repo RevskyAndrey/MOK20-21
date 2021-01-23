@@ -1,18 +1,34 @@
+/* eslint-disable camelcase */
 const Knex = require('knex');
 const {
   db: { knex: configKnex },
 } = require('../config');
 
-
 const knex = new Knex(configKnex);
-const timestamp = new Date();
 
-
-async function createOrder(order) {
-  const { username, from, to, status } = order;
+async function createOrder({ user, from, to }) {
+  try {
+    const item = { user, from, to };
+    const res = await knex('orders').insert(item).returning('*');
+    return res[0];
+  } catch (err) {
+    console.error('create order failed', err.message || err);
+    throw err;
+  }
 }
 
-async function getOrderByID(id){
+async function createOrderInfo({ order_id, product_id, quantity, price }) {
+  try {
+    const item = { order_id, product_id, quantity, price };
+    const res = await knex('order_info').insert(item).returning('*');
+    return res[0];
+  } catch (err) {
+    console.error('create order_info failed', err.message || err);
+    throw err;
+  }
+}
+
+async function getOrderByID(id) {
   if (!id) {
     throw new Error('ERROR: no order id defined');
   }
@@ -25,7 +41,6 @@ async function getOrderByID(id){
   // return res;
 }
 
-
 async function cancelOrder(id) {
   if (!id) {
     throw new Error('ERROR: no order id defined');
@@ -34,7 +49,9 @@ async function cancelOrder(id) {
   return res;
 }
 
-
 module.exports = {
-  createOrder, cancelOrder,getOrderByID
+  createOrder,
+  createOrderInfo,
+  cancelOrder,
+  getOrderByID,
 };

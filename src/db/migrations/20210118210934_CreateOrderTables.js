@@ -1,19 +1,18 @@
-  exports.up = async (knex) => {
+exports.up = async (knex) => {
+  await knex.raw('create extension if not exists "uuid-ossp"');
 
-    await knex.raw('create extension if not exists "uuid-ossp"');
-
-    await knex.schema.createTable('users', (table) => {
-      table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')).primary();
-      table.string('username').notNullable();
-      table.string('password').notNullable();
-      table.string('refreshToken').nullable();
-      table.timestamp('deleted_at').nullable();
-      table.timestamps();
-    });
+  await knex.schema.createTable('users', (table) => {
+    table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')).primary();
+    table.string('username').notNullable();
+    table.string('password').notNullable();
+    table.string('refreshToken').nullable();
+    table.timestamp('deleted_at').nullable();
+    table.timestamps();
+  });
 
   await knex.schema.createTable('orders', (table) => {
     table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')).primary();
-    table.uuid('user_id').references('id').inTable('users').notNullable();
+    table.uuid('user').references('id').inTable('users').notNullable();
     table.string('from').nullable();
     table.string('to').nullable();
     table.string('status').defaultTo('Opened');

@@ -29,6 +29,7 @@ async function createProduct(product) {
 
     if (!color || !type) {
       console.log('Error: this color or type is not indicated in the tables');
+      // eslint-disable-next-line consistent-return
       return;
     }
 
@@ -49,6 +50,32 @@ async function createProduct(product) {
     return res[0];
   } catch (err) {
     console.error('create product failed', err.message || err);
+    throw err;
+  }
+}
+
+async function findProduct(product) {
+  try {
+    if (!product.type || !product.color || !product.price) {
+      console.log('ERROR: No product  defined!');
+      return { status: 'ERROR: No product weight defined!' };
+    }
+
+    const p = JSON.parse(JSON.stringify(product));
+    const type = await getTypeProductTypename(p.type);
+    const color = await getColorProductColorname(p.color);
+
+    const res = await knex('products')
+      .select('*')
+      .where('type_id', `${type.id}`)
+      .andWhere('color_id', `${color.id}`)
+      .andWhere('price', product.price)
+      .returning('*');
+    res[0].type = p.type;
+    res[0].color = p.color;
+    return res[0];
+  } catch (err) {
+    console.error('find product failed', err.message || err);
     throw err;
   }
 }
@@ -82,6 +109,23 @@ async function updateProduct(id, product) {
     product.updated_at = timestamp;
     const res = await knex('products').update(product).where('id', id).returning('*');
     // console.log(`Debug: product update ${JSON.stringify(res[0])}`);
+    return res[0];
+  } catch (err) {
+    console.error('update product failed', err.message || err);
+    throw err;
+  }
+}
+
+async function updateProductQuantity(id, quantity) {
+  try {
+    if (!id) {
+      throw new Error('ERROR: no product id defined');
+    }
+    if (!quantity) {
+      throw new Error('Error : Nothing to update');
+    }
+    const res = await knex('products').update({ quantity }).where({ id }).returning('*');
+
     return res[0];
   } catch (err) {
     console.error('update product failed', err.message || err);
@@ -131,8 +175,10 @@ async function getAllDeletedProducts() {
 module.exports = {
   createProduct,
   getProduct,
+  findProduct,
   updateProduct,
   deleteProduct,
   getAllProducts,
   getAllDeletedProducts,
+  updateProductQuantity,
 };

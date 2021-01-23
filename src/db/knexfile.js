@@ -1,7 +1,9 @@
-require('dotenv').config({path: `${process.env.PWD}/.env`});
+require('dotenv').config({ path: `${process.env.PWD}/.env` });
 
-const {db: {knex}} = require('../config');
+const {
+  db: { knex },
+} = require('../config');
 
 module.exports = {
-    development: knex,
+  development: knex,
 };
