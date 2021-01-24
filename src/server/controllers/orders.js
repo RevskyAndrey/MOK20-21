@@ -45,7 +45,7 @@ async function createOrders(req, res) {
       const user = await db.findOneUser(username);
       const { from, to, product } = data;
       const foundProduct = await db.findProduct(product);
-      if (foundProduct.quantity >= data.product.quantity) {
+      if (foundProduct.id && foundProduct.quantity >= data.product.quantity) {
         const order = await db.createOrder({ user: user.id, from, to });
         const orderInfo = await db.createOrderInfo({
           order_id: order.id,
@@ -67,8 +67,8 @@ async function createOrders(req, res) {
 
 async function getOrderById(req, res) {
   const { id } = req.params;
-  db.getOrderByID(id);
-  res.status(200).json({ status: ' id orders' });
+  const idNum = id.trim();
+  db.getOrderByID(idNum).then((resolve) => res.status(200).json(resolve));
 }
 
 async function getAllOrders(req, res) {

@@ -33,12 +33,9 @@ async function getOrderByID(id) {
     throw new Error('ERROR: no order id defined');
   }
 
-  // const res = await knex
-  //   .innerJoin('order_info', 'products.type_id', '=', 'types.id')
-  //   .innerJoin('colors', 'products.color_id', '=', 'colors.id')
-  //   .select('*')
-  //   .from('products');
-  // return res;
+  const res = await knex('orders').select('*').where({ id });
+
+  return res[0];
 }
 
 async function cancelOrder(id) {

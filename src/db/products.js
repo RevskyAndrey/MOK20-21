@@ -125,7 +125,6 @@ async function updateProductQuantity(id, quantity) {
       throw new Error('Error : Nothing to update');
     }
     const res = await knex('products').update({ quantity }).where({ id }).returning('*');
-
     return res[0];
   } catch (err) {
     console.error('update product failed', err.message || err);

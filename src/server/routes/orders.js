@@ -15,10 +15,7 @@ orders.post('/', (req, res) => {
 });
 
 orders.get('/:id', (req, res) => {
-  const { id } = req.params;
-  getOrderById(id).then((resolve) => {
-    res.status(201).json(resolve);
-  });
+  getOrderById(req, res);
 });
 
 orders.get('/', (req, res) => {
