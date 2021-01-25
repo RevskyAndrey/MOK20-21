@@ -26,7 +26,6 @@ async function getUsernameFromToken(req) {
     }
 */
 
-// eslint-disable-next-line consistent-return
 async function createOrders(req, res) {
   try {
     const { body: data } = req;
@@ -46,16 +45,10 @@ async function createOrders(req, res) {
       const { from, to, product } = data;
       const foundProduct = await db.findProduct(product);
       if (foundProduct.id && foundProduct.quantity >= data.product.quantity) {
-        const order = await db.createOrder({ user: user.id, from, to });
-        const orderInfo = await db.createOrderInfo({
-          order_id: order.id,
-          product_id: foundProduct.id,
-          quantity: product.quantity,
-          price: product.price,
-        });
+        const order = await db.createOrder(user.id, from, to, foundProduct);
         const quantity = foundProduct.quantity - data.product.quantity;
-        db.updateProductQuantity(foundProduct.id, quantity);
-        res.status(201).json({ order, orderInfo });
+        await db.updateProductQuantity(foundProduct.id, quantity);
+        res.status(201).json({ order });
       } else {
         res.status(400).json({ status: 'Bad Request' });
       }
@@ -72,7 +65,10 @@ async function getOrderById(req, res) {
 }
 
 async function getAllOrders(req, res) {
-  res.status(200).json({ status: ' all orders' });
+  db.getAllOrders().then((resolve) => {
+    console.log(resolve);
+    res.status(200).json(resolve);
+  });
 }
 
 async function findCity(req, res) {

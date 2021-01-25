@@ -16,18 +16,14 @@ exports.up = async (knex) => {
     table.string('from').nullable();
     table.string('to').nullable();
     table.string('status').defaultTo('Opened');
-  });
-
-  await knex.schema.createTable('order_info', (table) => {
-    table.uuid('order_id').references('orders.id').onDelete('CASCADE');
     table.uuid('product_id').references('products.id').onDelete('CASCADE');
     table.integer('quantity').notNullable();
     table.decimal('price').notNullable().defaultTo(0.0);
+    table.decimal('weight').notNullable().defaultTo(0.0);
   });
 };
 
 exports.down = async (knex) => {
-  await knex.schema.dropTable('order_info');
   await knex.schema.dropTable('orders');
   await knex.schema.dropTable('users');
   await knex.raw('drop extension if exists "uuid-ossp" cascade');

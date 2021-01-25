@@ -19,8 +19,7 @@ orders.get('/:id', (req, res) => {
 });
 
 orders.get('/', (req, res) => {
-  getAllOrders();
-  res.status(201).json({ status: 'get all' });
+  getAllOrders(req, res);
 });
 
 orders.post('/find-city/', (req, res) => {

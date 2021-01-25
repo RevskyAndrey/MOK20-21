@@ -6,9 +6,14 @@ const {
 
 const knex = new Knex(configKnex);
 
-async function createOrder({ user, from, to }) {
+async function createOrder(user, from, to, product) {
   try {
     const item = { user, from, to };
+    item.product_id = product.id;
+    item.quantity = product.quantity;
+    item.price = product.price;
+    item.weight = product.weight;
+    console.log(item);
     const res = await knex('orders').insert(item).returning('*');
     return res[0];
   } catch (err) {
@@ -17,25 +22,26 @@ async function createOrder({ user, from, to }) {
   }
 }
 
-async function createOrderInfo({ order_id, product_id, quantity, price }) {
+async function getOrderByID(id) {
   try {
-    const item = { order_id, product_id, quantity, price };
-    const res = await knex('order_info').insert(item).returning('*');
+    if (!id) {
+      throw new Error('ERROR: no order id defined');
+    }
+    const res = await knex('orders').select('*').where({ id });
     return res[0];
   } catch (err) {
-    console.error('create order_info failed', err.message || err);
+    console.error('get  order failed', err.message || err);
     throw err;
   }
 }
 
-async function getOrderByID(id) {
-  if (!id) {
-    throw new Error('ERROR: no order id defined');
+async function getAllOrders() {
+  try {
+    return await knex('orders').select('*');
+  } catch (err) {
+    console.error('get all order failed', err.message || err);
+    throw err;
   }
-
-  const res = await knex('orders').select('*').where({ id });
-
-  return res[0];
 }
 
 async function cancelOrder(id) {
@@ -48,7 +54,7 @@ async function cancelOrder(id) {
 
 module.exports = {
   createOrder,
-  createOrderInfo,
   cancelOrder,
   getOrderByID,
+  getAllOrders,
 };

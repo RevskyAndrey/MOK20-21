@@ -37,7 +37,7 @@ const {
   updateProductQuantity,
 } = require('./products');
 
-const { createOrderInfo, createOrder, cancelOrder, getOrderByID } = require('./orders');
+const { getAllOrders, createOrder, cancelOrder, getOrderByID } = require('./orders');
 
 const { createUser, updateUser, deleteUser, findOneUser } = require('./users');
 
@@ -91,7 +91,7 @@ module.exports = {
   findOneUser,
   //---
   createOrder,
-  createOrderInfo,
+  getAllOrders,
   cancelOrder,
   getOrderByID,
 };
