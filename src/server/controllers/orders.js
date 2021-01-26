@@ -97,7 +97,7 @@ async function delivery(req, res) {
   };
   const result = await api.getPriceDelivery(params);
   if (result.success) {
-    const status = 'Sented';
+    const status = 'Awaiting dispatch';
     await db.updateStatus(id, status);
     const deliveryCost = result.data[0].AssessedCost;
     console.log(result.data[0].AssessedCost);
