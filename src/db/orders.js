@@ -48,8 +48,8 @@ async function updateStatus(id, status) {
   if (!id) {
     throw new Error('ERROR: no order id defined');
   }
-  const res = await knex('orders').update({ status: 'cancel' }).return('*');
-  return res;
+  const res = await knex('orders').update({ status }).where({ id }).returning('*');
+  return res[0];
 }
 
 module.exports = {

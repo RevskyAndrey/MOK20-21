@@ -27,13 +27,13 @@ async function getPriceDelivery(params) {
       CityRecipient: `${params.to}`,
       Weight: `${params.weight}`,
       ServiceType: 'DoorsDoors',
-      Cost: `${params.totalPrice}`,
+      Cost: `${params.price}`,
       CargoType: 'Cargo',
       SeatsAmount: '10',
     },
   });
-
-  console.log(result);
+  // console.log(result.data);
+  return result.data;
 }
 
 module.exports = {

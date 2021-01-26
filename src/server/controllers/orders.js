@@ -87,15 +87,33 @@ async function findCity(req, res) {
 
 async function delivery(req, res) {
   const { id } = req.params;
+  const item = await db.getOrderByID(id);
+  const totalPrice = item.price * item.quantity;
+  const params = {
+    from: item.from,
+    to: item.to,
+    weight: item.weight,
+    price: totalPrice,
+  };
+  const result = await api.getPriceDelivery(params);
+  if (result.success) {
+    const status = 'Sented';
+    await db.updateStatus(id, status);
 
-  const result = id;
-  res.status(200).json(result);
+    res.status(200).json({ 'Cost of delivery': 'result.data.AssessedCost' });
+  }
 }
 
 async function cancelingOrder(req, res) {
   const { id } = req.params;
-
-  res.status(200).json({ id });
+  const status = 'Canceled';
+  db.updateStatus(id, status).then(async (resolve) => {
+    const foundProduct = await db.getProduct(resolve.product_id);
+    console.log(foundProduct);
+    const quantity = foundProduct.quantity + resolve.quantity;
+    await db.updateProductQuantity(resolve.product_id, quantity);
+    res.status(200).json(resolve);
+  });
 }
 
 module.exports = { createOrders, getOrderById, getAllOrders, findCity, delivery, cancelingOrder };
