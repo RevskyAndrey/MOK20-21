@@ -6,13 +6,13 @@ const {
 
 const knex = new Knex(configKnex);
 
-async function createOrder(user, from, to, product) {
+async function createOrder(user, from, to, { id, quantity, price, weight }) {
   try {
     const item = { user, from, to };
-    item.product_id = product.id;
-    item.quantity = product.quantity;
-    item.price = product.price;
-    item.weight = product.weight;
+    item.product_id = id;
+    item.quantity = quantity;
+    item.price = price;
+    item.weight = weight;
     console.log(item);
     const res = await knex('orders').insert(item).returning('*');
     return res[0];
@@ -44,7 +44,7 @@ async function getAllOrders() {
   }
 }
 
-async function cancelOrder(id) {
+async function updateStatus(id, status) {
   if (!id) {
     throw new Error('ERROR: no order id defined');
   }
@@ -54,7 +54,7 @@ async function cancelOrder(id) {
 
 module.exports = {
   createOrder,
-  cancelOrder,
+  updateStatus,
   getOrderByID,
   getAllOrders,
 };

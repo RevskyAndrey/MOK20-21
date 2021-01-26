@@ -45,7 +45,13 @@ async function createOrders(req, res) {
       const { from, to, product } = data;
       const foundProduct = await db.findProduct(product);
       if (foundProduct.id && foundProduct.quantity >= data.product.quantity) {
-        const order = await db.createOrder(user.id, from, to, foundProduct);
+        const item = {
+          id: foundProduct.id,
+          quantity: data.product.quantity,
+          price: data.product.price,
+          weight: foundProduct.weight,
+        };
+        const order = await db.createOrder(user.id, from, to, item);
         const quantity = foundProduct.quantity - data.product.quantity;
         await db.updateProductQuantity(foundProduct.id, quantity);
         res.status(201).json({ order });
@@ -86,10 +92,10 @@ async function delivery(req, res) {
   res.status(200).json(result);
 }
 
-// async function cancelingOrder(id, query) {
-//   // check order
-//   // update status
-//   // return quantity
-// }
+async function cancelingOrder(req, res) {
+  const { id } = req.params;
 
-module.exports = { createOrders, getOrderById, getAllOrders, findCity, delivery };
+  res.status(200).json({ id });
+}
+
+module.exports = { createOrders, getOrderById, getAllOrders, findCity, delivery, cancelingOrder };

@@ -30,9 +30,8 @@ orders.post('/delivery/:id', (req, res) => {
   delivery(req, res);
 });
 
-orders.post('/cansel/:id', (req, res) => {
-  const { id } = req.params;
-  cancelingOrder(id, res);
+orders.post('/cancel/:id', (req, res) => {
+  cancelingOrder(req, res);
 });
 
 module.exports = orders;
