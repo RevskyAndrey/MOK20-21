@@ -99,8 +99,9 @@ async function delivery(req, res) {
   if (result.success) {
     const status = 'Sented';
     await db.updateStatus(id, status);
-
-    res.status(200).json({ 'Cost of delivery': 'result.data.AssessedCost' });
+    const deliveryCost = result.data[0].AssessedCost;
+    console.log(result.data[0].AssessedCost);
+    res.status(200).json({ 'Cost of delivery': deliveryCost });
   }
 }
 
